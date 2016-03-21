@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e1d50fdb39fcd6b4eaea1ad30fff7d0b
+timeCreated: 1458492283
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - glassSound: {fileID: 8300000, guid: 6389377c78eaeec469e81c0be089a654, type: 3}
+  - oliveSound: {fileID: 8300000, guid: 31c93c91c9274a849abe3a794f7591ac, type: 3}
+  - uraniumSound: {fileID: 8300000, guid: f72f44c408ce7244388e735bd5bea020, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

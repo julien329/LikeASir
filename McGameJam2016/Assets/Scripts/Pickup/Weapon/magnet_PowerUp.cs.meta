@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: b8e4ad93b0fbd4c4eace3af49f1a7bde
+timeCreated: 1458492497
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - magnetSound: {fileID: 8300000, guid: ad5151643cbe4874c8d4298c5630a6fa, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

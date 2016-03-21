@@ -1,0 +1,182 @@
+fileFormatVersion: 2
+guid: 21f18adff8ef8f84d975dbe57be6cb91
+timeCreated: 1458425404
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Antenna
+    100002: Camera
+    100004: Chain1
+    100006: Chain2
+    100008: Chain3
+    100010: Chain4
+    100012: Chain5
+    100014: Head
+    100016: Lamp
+    100018: Leg1
+    100020: Leg1.001
+    100022: Leg1.002
+    100024: MonocleGlass
+    100026: MonocleHolder
+    100028: Mustache
+    100030: Nose
+    100032: //RootNode
+    100034: Roller1
+    100036: Roller1.001
+    100038: Roller1.002
+    100040: Rotator
+    100042: Shin1
+    100044: Shin1.001
+    100046: Shin1.002
+    400000: Antenna
+    400002: Camera
+    400004: Chain1
+    400006: Chain2
+    400008: Chain3
+    400010: Chain4
+    400012: Chain5
+    400014: Head
+    400016: Lamp
+    400018: Leg1
+    400020: Leg1.001
+    400022: Leg1.002
+    400024: MonocleGlass
+    400026: MonocleHolder
+    400028: Mustache
+    400030: Nose
+    400032: //RootNode
+    400034: Roller1
+    400036: Roller1.001
+    400038: Roller1.002
+    400040: Rotator
+    400042: Shin1
+    400044: Shin1.001
+    400046: Shin1.002
+    2300000: Antenna
+    2300002: Chain1
+    2300004: Chain2
+    2300006: Chain3
+    2300008: Chain4
+    2300010: Chain5
+    2300012: Head
+    2300014: Leg1
+    2300016: Leg1.001
+    2300018: Leg1.002
+    2300020: MonocleGlass
+    2300022: MonocleHolder
+    2300024: Mustache
+    2300026: Nose
+    2300028: Roller1
+    2300030: Roller1.001
+    2300032: Roller1.002
+    2300034: Rotator
+    2300036: Shin1
+    2300038: Shin1.001
+    2300040: Shin1.002
+    3300000: Antenna
+    3300002: Chain1
+    3300004: Chain2
+    3300006: Chain3
+    3300008: Chain4
+    3300010: Chain5
+    3300012: Head
+    3300014: Leg1
+    3300016: Leg1.001
+    3300018: Leg1.002
+    3300020: MonocleGlass
+    3300022: MonocleHolder
+    3300024: Mustache
+    3300026: Nose
+    3300028: Roller1
+    3300030: Roller1.001
+    3300032: Roller1.002
+    3300034: Rotator
+    3300036: Shin1
+    3300038: Shin1.001
+    3300040: Shin1.002
+    4300000: Leg1.002
+    4300002: Shin1.002
+    4300004: Roller1.002
+    4300006: Leg1.001
+    4300008: Shin1.001
+    4300010: Roller1.001
+    4300012: Roller1
+    4300014: Shin1
+    4300016: Leg1
+    4300018: Mustache
+    4300020: Chain5
+    4300022: Chain4
+    4300024: Chain3
+    4300026: Chain2
+    4300028: Chain1
+    4300030: MonocleGlass
+    4300032: MonocleHolder
+    4300034: Antenna
+    4300036: Rotator
+    4300038: Nose
+    4300040: Head
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

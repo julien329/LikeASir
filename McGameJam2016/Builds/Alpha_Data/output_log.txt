@@ -1,0 +1,91 @@
+Initialize engine version: 5.3.2f1 (e87ab445ead0)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: Intel(R) HD Graphics 4600 (ID=0x416)
+    Vendor:   Intel
+    VRAM:     2138 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+- Completed reload, in  0.116 seconds
+Platform assembly: C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\julie\Documents\McGameJam2016\McGameJam2016\Builds\Alpha_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+<RI.Hid> Failed to create device file:
+ 2 The system cannot find the file specified.
+
+ 
+(Filename:  Line: 54)
+
+<RI.Hid> Failed to create device file:
+ 2 The system cannot find the file specified.
+
+ 
+(Filename:  Line: 54)
+
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.733425 ms
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 3158 -> priority: 1 
+  Thread -> id: 2d10 -> priority: 1 
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 3.528139 ms
+
+Unloading 14 unused Assets to reduce memory usage. Loaded Objects now: 1098.
+Total: 0.312186 ms (FindLiveObjects: 0.040627 ms CreateObjectMapping: 0.021810 ms MarkObjects: 0.219813 ms  DeleteObjects: 0.026514 ms)
+
+Joystick connected ("Controller (Xbox 360 Wireless Receiver for Windows)").
+ 
+(Filename:  Line: 1353)
+
+Joystick disconnected ("Controller (Xbox 360 Wireless Receiver for Windows)").
+ 
+(Filename:  Line: 1260)
+
+4
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+RobotClean(Clone)
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+4
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+RobotClean(Clone)
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+4
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+RobotClean(Clone)
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+4
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+RobotClean(Clone)
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.926858 ms
+
+Unloading 59 unused Assets to reduce memory usage. Loaded Objects now: 1672.
+Total: 0.428936 ms (FindLiveObjects: 0.085958 ms CreateObjectMapping: 0.027369 ms MarkObjects: 0.269849 ms  DeleteObjects: 0.045758 ms)
+
