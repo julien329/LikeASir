@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class Gameflow : MonoBehaviour {
 
     static MapHandler mapHandler;
-    static CameraScript camScript;
+    static DynamicCamera camScript;
     static int gameState;
     static Text textMod;
     static string textPure;
@@ -90,7 +90,7 @@ public class Gameflow : MonoBehaviour {
             isLoaded = true;
             mapHandler = GameObject.Find("MapHandler").GetComponent<MapHandler>();
             textMod = GameObject.Find("ReadyMessage").GetComponent<Text>();
-            camScript = GameObject.Find("Main Camera").GetComponent<CameraScript>();
+            camScript = GameObject.Find("Main Camera").GetComponent<DynamicCamera>();
 
             textPure = textMod.text;
         }

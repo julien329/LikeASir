@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour {
     private bool grounded = true;
     [Range(1,4)]
     public int playerNumber;
-    private int idleSeconds = 0;
+    private int idleSeconds = 3;
 
     //GameStuffThatIsImportant - Don't destroy players, disable them
     public int deathCount;

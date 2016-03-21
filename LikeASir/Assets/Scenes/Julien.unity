@@ -6600,7 +6600,6 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -9025,7 +9024,7 @@ GameObject:
   - 92: {fileID: 1720869933}
   - 124: {fileID: 1720869932}
   - 81: {fileID: 1720869931}
-  - 114: {fileID: 1720869936}
+  - 114: {fileID: 1720869937}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9100,7 +9099,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
---- !u!114 &1720869936
+--- !u!114 &1720869937
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -9108,11 +9107,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1720869930}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff1cec2e5a123a2459b094b156b1e46f, type: 3}
+  m_Script: {fileID: 11500000, guid: fc443c2fcc6545942bae1d13fa2e089f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smoothFactor: 1
-  distance: 40
+  visibleOffset: 10
+  moveSmoothIntensity: 5
 --- !u!1 &1734371580
 GameObject:
   m_ObjectHideFlags: 0
