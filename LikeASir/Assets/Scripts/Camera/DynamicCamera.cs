@@ -55,7 +55,6 @@ public class DynamicCamera : MonoBehaviour {
                     minY = Mathf.Min(minY, player.transform.position.y);
                     maxX = Mathf.Max(maxX, player.transform.position.x);
                     maxY = Mathf.Max(maxY, player.transform.position.y);
-
                 }
             }
         }
@@ -63,9 +62,14 @@ public class DynamicCamera : MonoBehaviour {
 
     float FindRequiredZoom() {
         float height = maxY - minY + (2 * visibleOffset);
-        float newZoom = height * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-        newZoom = Mathf.Clamp(newZoom, 10, 50);
+        float width = maxX - minX + (2 * visibleOffset);
 
-        return newZoom;
+        float neededZoomY = height * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+        float neededZoomX = (width / mainCamera.aspect) * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+
+        neededZoomY = Mathf.Clamp(neededZoomY, 10, 50);
+        neededZoomX = Mathf.Clamp(neededZoomX, 10, 50);
+
+        return Mathf.Max(neededZoomX, neededZoomY);
     }
 }
