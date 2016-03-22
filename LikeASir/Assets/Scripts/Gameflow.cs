@@ -28,6 +28,7 @@ public class Gameflow : MonoBehaviour {
 
     void Start()
     {
+        StopAllCoroutines();
         DontDestroyOnLoad(this.gameObject);
         leaderBoard = new Pair<GameObject, int>[4];
         for (int i = 0; i < 4; i++)
@@ -46,7 +47,7 @@ public class Gameflow : MonoBehaviour {
             SceneManager.LoadScene(1);
             textMod = null;
             countDown = 2f;
-            gameTimer = 120f;
+            gameTimer = 60f;
 
         }
     }
@@ -74,14 +75,13 @@ public class Gameflow : MonoBehaviour {
             {
                 gameState = 0;
                 SceneManager.LoadScene(0);
+                Destroy(this.gameObject);
             }
                 
         }
     }
     void OnLevelWasLoaded(int i)
     {
-        if (i == 0)
-            StopCoroutine(PlayMusicGame());
         if (i == 1)
         {
             StopCoroutine(PlayMusicMenu());
@@ -223,6 +223,7 @@ public class Gameflow : MonoBehaviour {
                 victoryTexts[i].text = victoryTexts[i].text + " " + victoryScript.playerPlaces[i];
             else
                 victoryTexts[i].text = "Player " + victoryScript.playerPlaces[i] + " as Sir-Not-Appearing-In-This-Game";
+            Destroy(leaderBoard[i].First);
         }
 
         GameObject.Find("robot1").transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = victoryScript.playerColors[victoryScript.playerPlaces[0] - 1];

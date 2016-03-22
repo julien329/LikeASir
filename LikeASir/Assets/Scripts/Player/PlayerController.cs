@@ -11,14 +11,17 @@ public class PlayerController : MonoBehaviour {
     public LayerMask ground;
     public LayerMask player;
     private Animator anim;
-    private GameObject lastWall;
+    private GameObject lastWallTouched;
+    private GameObject lastWallJumped;
     private AudioSource audioSource;
     public AudioClip jumpSound;
 
+    public float maxSlidingVelocity = 3f;
+    public float maxFallingVelocity = 25f;
     public float speed;
     public float jumpForce;
     public float distToGround;
-    private bool grounded = true;
+    public bool grounded = true;
     [Range(1,4)]
     public int playerNumber;
     private int idleSeconds = 3;
@@ -54,8 +57,10 @@ public class PlayerController : MonoBehaviour {
         // Set the movement vector based on the axis input.
         Vector3 move = new Vector3(h, 0f, 0f);
 
-        //Move current position using ClampMagnitude to normalize the diagonal run speed.
+        //Move current position.
         playerRigidbody.MovePosition(transform.position + move * speed * Time.deltaTime);
+
+        playerRigidbody.velocity = Vector3.ClampMagnitude(playerRigidbody.velocity, maxFallingVelocity);
 
         anim.SetInteger("Horizontal", (int)h);
     }
@@ -64,6 +69,7 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetButtonDown("Jump" + playerNumber) && grounded) {
             grounded = false;
+            lastWallJumped = lastWallTouched;
             playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
             playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
@@ -78,7 +84,7 @@ public class PlayerController : MonoBehaviour {
         while (!grounded) {
             if (Physics.Raycast(transform.position, Vector3.down, distToGround, ground)) {
                 grounded = true;
-                lastWall = null;
+                lastWallJumped = lastWallTouched = null;
                 playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
             }
 
@@ -91,7 +97,7 @@ public class PlayerController : MonoBehaviour {
         RaycastHit hit;
         while (true) {
             if (Physics.Raycast(transform.position, Vector3.down, out hit, distToGround, player)) {
-                lastWall = null;
+                lastWallJumped = lastWallTouched = null;
 
                 playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
                 playerRigidbody.AddForce(Vector3.up * jumpForce * 0.75f, ForceMode.Impulse);
@@ -113,22 +119,31 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision other) {
-        if (other.gameObject.tag == "Wall" && lastWall != other.gameObject) {
+        if (other.gameObject.tag == "Wall") {
+            if (other.gameObject != lastWallJumped) {
+                grounded = true;
+                playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
+            }
+            lastWallTouched = other.gameObject;
+        }  
+    }
+
+    void OnCollisionStay(Collision other) {
+        if (other.gameObject.tag == "Wall" && other.gameObject != lastWallJumped) {
+            playerRigidbody.velocity = Vector3.ClampMagnitude(playerRigidbody.velocity, maxSlidingVelocity);
             grounded = true;
-            playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
-            lastWall = other.gameObject;
         }
+
     }
 
     void OnCollisionExit(Collision other) {
-        if (other.gameObject.tag == "Wall" && lastWall != other.gameObject) {
+        if (other.gameObject.tag == "Wall") {
             grounded = false;
-            playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
+            StartCoroutine(CheckIfGrounded());
         }
     }
 
     public void playerDied() {
-        StopCoroutine(JumpOnPlayer());
         mapHandler.PlayerDied(this);
         grounded = true;
     }

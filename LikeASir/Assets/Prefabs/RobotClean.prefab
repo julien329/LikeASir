@@ -2011,6 +2011,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wepName: TopHatClean
+  magnetSound: {fileID: 0}
 --- !u!114 &11452428
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2032,9 +2033,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   jumpSound: {fileID: 8300000, guid: c4869e935bb7780428395263c8f6b4ec, type: 3}
+  maxSlidingVelocity: 3
+  maxFallingVelocity: 25
   speed: 7
   jumpForce: 17
   distToGround: 0.8
+  grounded: 1
   playerNumber: 1
   deathCount: 0
 --- !u!114 &11464610
