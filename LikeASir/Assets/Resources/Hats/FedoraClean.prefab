@@ -10,8 +10,6 @@ GameObject:
   - 4: {fileID: 429928}
   - 33: {fileID: 3306332}
   - 23: {fileID: 2310824}
-  - 135: {fileID: 13502750}
-  - 114: {fileID: 11437270}
   m_Layer: 0
   m_Name: Hat
   m_TagString: Untagged
@@ -28,6 +26,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 486492}
   - 114: {fileID: 11435794}
+  - 135: {fileID: 13598722}
+  - 114: {fileID: 11432906}
   m_Layer: 0
   m_Name: FedoraClean
   m_TagString: Untagged
@@ -83,7 +83,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 134658}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 9.397091, y: 5.7941184, z: -7.1054153}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 429928}
@@ -156,6 +156,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162832}
   m_Mesh: {fileID: 4300000, guid: 8beaec119397ae44b8217797bf40bc9d, type: 3}
+--- !u!114 &11432906
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 134658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfa75742f563c5d479ca7b5c549603a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wepName: Cannon
+  ammo: 5
+  projectile: {fileID: 145670, guid: a8d3cea76105a3b40b8c0cc166f1e853, type: 2}
 --- !u!114 &11435794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -170,30 +184,18 @@ MonoBehaviour:
   rotationSpeed: 100
   translationSpeed: 0.25
   translationDistance: 0.25
---- !u!114 &11437270
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 131372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 660a793e92553be479f1abb04b522a6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wepName: FedoraClean
---- !u!135 &13502750
+--- !u!135 &13598722
 SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 131372}
+  m_GameObject: {fileID: 134658}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.0106143
-  m_Center: {x: -6.016624e-10, y: -0.0011033992, z: 0.010558144}
+  m_Radius: 1
+  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

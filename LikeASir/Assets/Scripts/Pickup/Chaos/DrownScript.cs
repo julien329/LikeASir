@@ -9,7 +9,7 @@ public class DrownScript : ChaoticItem
         GameObject drowner = (GameObject)Instantiate(Resources.Load("drowner")) as GameObject;
     }
 
-    public override void playerPickUp(PlayerController player)
+    protected override void playerPickUp(PlayerController player)
     {
         isPickedUp = true;
         bringMayhemToTheWorld();

@@ -26,7 +26,7 @@ public class pianoDunk : ChaoticItem
         pianoScript.piano = this;
     }
 
-    public override void playerPickUp(PlayerController player)
+    protected override void playerPickUp(PlayerController player)
     {
         bringMayhemToTheWorld();
         Destroy(gameObject);

@@ -15,7 +15,7 @@ public class mayhemScript : ChaoticItem
         }
     }
 
-    public override void playerPickUp(PlayerController player)
+    protected override void playerPickUp(PlayerController player)
     {
         bringMayhemToTheWorld();
         Destroy(gameObject);

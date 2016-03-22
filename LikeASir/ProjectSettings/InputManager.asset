@@ -70,7 +70,7 @@ InputManager:
     axis: 3
     joyNum: 4
   - serializedVersion: 3
-    m_Name: RightVertical1
+    m_Name: LeftVertical1
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -83,10 +83,10 @@ InputManager:
     snap: 1
     invert: 0
     type: 2
-    axis: 4
+    axis: 1
     joyNum: 1
   - serializedVersion: 3
-    m_Name: RightVertical2
+    m_Name: LeftVertical2
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -99,10 +99,10 @@ InputManager:
     snap: 1
     invert: 0
     type: 2
-    axis: 4
+    axis: 1
     joyNum: 2
   - serializedVersion: 3
-    m_Name: RightVertical3
+    m_Name: LeftVertical3
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -115,10 +115,10 @@ InputManager:
     snap: 1
     invert: 0
     type: 2
-    axis: 4
+    axis: 1
     joyNum: 3
   - serializedVersion: 3
-    m_Name: RightVertical4
+    m_Name: LeftVertical4
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -131,7 +131,7 @@ InputManager:
     snap: 1
     invert: 0
     type: 2
-    axis: 4
+    axis: 1
     joyNum: 4
   - serializedVersion: 3
     m_Name: Horizontal1

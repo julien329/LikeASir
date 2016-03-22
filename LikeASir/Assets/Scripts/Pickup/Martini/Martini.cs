@@ -12,7 +12,7 @@ public class Martini : IPickup
         startTimer();
     }
 
-    public override void playerPickUp(PlayerController player)
+    protected override void playerPickUp(PlayerController player)
     {
         switch (martiniType) {
             case MartiniPiece.GLASS :

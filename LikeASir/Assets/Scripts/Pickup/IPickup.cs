@@ -11,9 +11,23 @@ public abstract class IPickup : MonoBehaviour
     public bool IsPickedUp { get { return isPickedUp; } set { isPickedUp = value; } }
     protected GameObject player;
 
-    public abstract void playerPickUp(PlayerController player);
+    protected abstract void playerPickUp(PlayerController player);
 
-    //
+    //Base init
+    protected virtual void init()
+    {
+        isPickedUp = false;
+        startTimer();
+    }
+
+    protected virtual bool canBePicked(String tag)
+    {
+        if (Equals(tag, "Player") && !isPickedUp)
+            return true;
+        else
+            return false;
+    }
+
     public virtual void startTimer()
     {
         StartCoroutine(LifeTime());
@@ -21,11 +35,11 @@ public abstract class IPickup : MonoBehaviour
 
     public virtual void onTimerEnd()
     {
-        if (!isPickedUp)
+        if (this.gameObject != null)
             Destroy(this.gameObject);
     }
 
-    IEnumerator LifeTime()
+    protected IEnumerator LifeTime()
     {
         int timer = 0;
         while (timer < lifeTime)

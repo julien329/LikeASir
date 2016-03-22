@@ -1391,7 +1391,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!82 &1185555076
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2017,7 +2017,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 423412, guid: 47b9769af2398584485a8db5aab624e5, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5428978, guid: 47b9769af2398584485a8db5aab624e5, type: 2}
       propertyPath: m_UseGravity
