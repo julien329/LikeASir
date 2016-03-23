@@ -7,23 +7,20 @@ public class PlatformResizeX : IPlatform {
     public float returnTimer = 3f;
     public float targetSizeX = 4f;
 
-
     void Start() {
         init();
     }
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.P) && !inUse)
-            ApplyEffect();
-    }
-
 
     public override void ApplyEffect() {
-        StartCoroutine(TranslatePlatform());
-        inUse = true;
+        if (!inUse) {
+            StartCoroutine(ResizePlatform());
+            inUse = true;
+        }
     }
 
-    IEnumerator TranslatePlatform() {
+
+    IEnumerator ResizePlatform() {
 
         Vector3 original = transform.localScale;
         Vector3 target = new Vector3(targetSizeX, original.y, original.z);

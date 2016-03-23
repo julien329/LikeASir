@@ -11,15 +11,14 @@ public class PlatformStandart : IPlatform {
         init();
     }
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.P) && !inUse)
-            ApplyEffect();
-    }
 
     public override void ApplyEffect() {
-        StartCoroutine(ColorPlatform());
-        inUse = true;
+        if (!inUse) {
+            StartCoroutine(ColorPlatform());
+            inUse = true;
+        }
     }
+
 
     IEnumerator ColorPlatform() {
         Color color = mesh.material.color;

@@ -7,21 +7,18 @@ public class PlatformRotateY : IPlatform {
     public float returnTimer = 3f;
     public float targetRotation = 90f;
 
-
     void Start() {
         init();
     }
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.P) && !inUse)
-            ApplyEffect();
-    }
-
 
     public override void ApplyEffect() {
-        StartCoroutine(RotatePlatform());
-        inUse = true;
+        if (!inUse) {
+            StartCoroutine(RotatePlatform());
+            inUse = true;
+        }
     }
+
 
     IEnumerator RotatePlatform() {
 

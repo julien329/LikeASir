@@ -4,7 +4,6 @@ using System.Collections;
 public class PlatformDisable : IPlatform {
 
     public float returnTimer = 3f;
-
     Renderer mesh;
     Collider col;
 
@@ -15,16 +14,14 @@ public class PlatformDisable : IPlatform {
         init();
     }
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.P) && !inUse)
-            ApplyEffect();
-    }
-
 
     public override void ApplyEffect() {
-        StartCoroutine(DisablePlatform());
-        inUse = true;
+        if (!inUse) {
+            StartCoroutine(DisablePlatform());
+            inUse = true;
+        }
     }
+
 
     IEnumerator DisablePlatform() {
 

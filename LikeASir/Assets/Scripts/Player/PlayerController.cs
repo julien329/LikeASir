@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour {
     public float maxSlidingVelocity = 5f;
     public float maxFallingVelocity = 25f;
     public float stickToWallTime = 0.5f;
-    public float speed = 7f;
+    public float speed = 8f;
     public float jumpForce = 17f;
     public float distToGround = 0.85f;
     public bool grounded = true;
