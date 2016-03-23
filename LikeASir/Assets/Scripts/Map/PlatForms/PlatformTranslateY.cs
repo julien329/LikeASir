@@ -28,7 +28,6 @@ public class PlatformTranslateY : IPlatform {
         Vector3 origin = transform.position;
         Vector3 target = origin + new Vector3(0f, targetDistance, 0f);
         rigidBody.constraints &= ~RigidbodyConstraints.FreezePositionY;
-        print(origin);
 
         if (origin.y < target.y) {
             while (transform.position.y < target.y) {
