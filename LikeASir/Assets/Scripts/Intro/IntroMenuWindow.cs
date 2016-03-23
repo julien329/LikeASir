@@ -27,7 +27,6 @@ public class IntroMenuWindow : MonoBehaviour {
         playerNameTxt = transform.GetChild(0).gameObject.GetComponent<Text>();
 
         currentColor = Color.gray;
-       
 
         beginLevel = false;
 

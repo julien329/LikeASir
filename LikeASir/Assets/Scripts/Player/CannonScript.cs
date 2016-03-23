@@ -41,8 +41,11 @@ public class CannonScript : MonoBehaviour
         {
             //If we have a weapon, we shoot it.
             if (currentWeapon != null && Input.GetButtonDown("Fire" + player.playerNumber))
+            {
                 currentWeapon.Shoot(this);
-
+                //Update the ammo display
+                player.playerDisplay.UpdateWeaponDisplay(player);
+            }
         }
     }
 

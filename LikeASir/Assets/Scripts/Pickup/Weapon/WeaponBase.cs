@@ -8,19 +8,25 @@ public class WeaponBase : IPickup
     public string wepName;
 
     [SerializeField]
+    protected int maxAmmo;
+    public int MaxAmmo { get { return maxAmmo; } }
     protected int ammo;
-    public GameObject projectile;
     public int Ammo { get { return ammo; } set { ammo = value; } }
+
+    public GameObject projectile;
+
 
     void Start()
     {
         base.init();
+        ammo = maxAmmo;
     }
 
     //Allows to set the stats on a weapon being equiped
     public void initWeapon(WeaponBase wep)
     {
         wepName = wep.wepName;
+        maxAmmo = wep.maxAmmo;
         ammo = wep.ammo;
         projectile = wep.projectile;
         isPickedUp = true;
@@ -47,6 +53,7 @@ public class WeaponBase : IPickup
             cannon.setWeapon(null);
             Destroy(this);
         }
+        
     }
 
     //What happens when a player picks up the item
@@ -57,6 +64,8 @@ public class WeaponBase : IPickup
 
         //Destroy the floating pickup on the play area
         Destroy(this.gameObject);
+
+        player.playerDisplay.UpdateWeaponDisplay(player);
     }
 
     //What can trigger the pickup

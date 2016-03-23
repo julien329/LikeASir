@@ -32,7 +32,7 @@ public class Martini : IPickup
             isPickedUp = true;
             player.martiniList[(int)martiniType] = true;
             Destroy(this.gameObject);
-            player.mapHandler.UpdateItemDisplay(player);
+            player.mapHandler.playerStats.UpdateItemDisplay(player);
         }
         else
             Destroy(this.gameObject);

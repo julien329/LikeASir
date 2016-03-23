@@ -10,6 +10,9 @@ public class MapHandler : MonoBehaviour
     private int respawnTime = 3;
     public GameObject playerPrefab;
 
+    //Will hold UI elements of the players
+    public PlayerStats playerStats;
+
     Queue<Spawnable> spawnPoints;
     List<Spawnable> spawnPointsMartini;
     List<Spawnable> spawnPointsHats;
@@ -21,13 +24,10 @@ public class MapHandler : MonoBehaviour
     static List<IPlatform> platforms;
     //Espace de texte
     public static List<GameObject> players;
-    Image[] playerPanels;
-    GameObject[] playerMartini;
-    Text[] playerDeaths;
-    Color[] playerColors;
 
     void Start()
     {
+        playerStats = GameObject.Find("GameFlow").GetComponent<PlayerStats>();
         spawnPoints = new Queue<Spawnable>();
         for (int i = 0; i < 4; i++) {
             spawnPoints.Enqueue(GameObject.Find("PlayerSpawns").transform.GetChild(i).GetComponent<Spawnable>());
@@ -79,17 +79,20 @@ public class MapHandler : MonoBehaviour
 
     public void PlayerDied(PlayerController player)
     {
-        player.deathCount++;
-        playerDeaths[player.playerNumber - 1].text = "Died: " + player.deathCount;
-        playerPanels[player.playerNumber - 1].color = new Color(255, 255, 255, 1f);
+        playerStats.PlayerDied(player);
 
+        //What is this line about?--------------------------------------------------------------------------
         CannonScript cannon = players[player.playerNumber - 1].GetComponentInChildren<CannonScript>();
+
         //Dead player loses all his items!
         for (int i = 0; i < 3; i++) {
             player.martiniList[i] = false;
-            UpdateItemDisplay(player);
+            
         }
+        playerStats.UpdateItemDisplay(player);
+
         //POSSIBLE BM TEXT
+
         player.gameObject.SetActive(false);
         StartCoroutine(RespawnTime(player));
     }
@@ -105,30 +108,10 @@ public class MapHandler : MonoBehaviour
 
         player.transform.position = GetNextSpawn();
         player.gameObject.SetActive(true);
-        playerPanels[player.playerNumber - 1].color = new Color(255, 255, 255, 100f/255);
+        playerStats.UpdatePanelColor(player);
     }
 
-    public void UpdateItemDisplay(PlayerController player)
-    {
-        //GLASS
-        //OLIVE
-        //URANIUM
-
-        int victory = 0;
-        for (int i = 0; i < 3; i++)
-        {
-            if(player.martiniList[i])
-            {
-                playerMartini[player.playerNumber-1].transform.GetChild(i).gameObject.GetComponent<Image>().enabled = true;
-                victory++;
-            }
-            else
-                playerMartini[player.playerNumber-1].transform.GetChild(i).gameObject.GetComponent<Image>().enabled = false;
-        }
-
-        if (victory >= 3)
-            PlayerWins(player);
-    }
+    
 
     Vector3 GetNextSpawn() {
 
@@ -176,10 +159,9 @@ public class MapHandler : MonoBehaviour
     public void spawnPlayers(List<int> playersInGame)
     {
         players = new List<GameObject>();
-        playerPanels = new Image[playersInGame.Count];
-        playerDeaths = new Text[playersInGame.Count];
-        playerColors = new Color[playersInGame.Count];
-        playerMartini = new GameObject[playersInGame.Count];
+
+        //Inits the UI element tables
+        playerStats.initTables(playersInGame.Count);
 
         //Get UI elements 
         //Stat panels
@@ -188,20 +170,13 @@ public class MapHandler : MonoBehaviour
         //Spawn the players
         for (int i = 0; i < playersInGame.Count; i++)
         {
-            playerColors[i] = Gameflow.playerStats.playerColors[i];
-            GameObject UI = GameObject.Find("Player" + (i + 1) + "UI");
-            UI.SetActive(true);
-            playerPanels[i] = UI.GetComponent<Image>();
-            //Panel Text Color:
-            playerPanels[i].transform.GetChild(0).gameObject.GetComponent<Text>().color = playerColors[i];
-            playerMartini[i] = GameObject.Find("ItemsP"+ (i + 1));
-            playerDeaths[i] = GameObject.Find("DeathCountP"+ (i + 1)).GetComponent<Text>();
-            playerDeaths[i].color = playerColors[i];
+             
             players.Add((GameObject)Instantiate(playerPrefab, GetNextSpawn(), playerPrefab.transform.rotation));
             players[i].GetComponent<PlayerController>().playerNumber = i + 1;
-            players[i].transform.FindChild("Head").GetComponent<MeshRenderer>().material.color = playerColors[i];
+            playerStats.initPlayerUI(i);
+            players[i].transform.FindChild("Head").GetComponent<MeshRenderer>().material.color = playerStats.playerColors[i];
         }
-
+        Debug.Log(playersInGame.Count);
         //Erase the displays of the absent players
         for(int i = playersInGame.Count; i < 4; i++)
         {

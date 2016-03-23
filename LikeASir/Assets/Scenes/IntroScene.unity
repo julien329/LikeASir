@@ -1481,6 +1481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735584215b6e0f64dac4603e7ea921db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapHandler: {fileID: 0}
   colors:
   - {r: 0.5735294, g: 0.5735294, b: 0.5735294, a: 1}
   - {r: 0, g: 0.13103437, b: 1, a: 1}
@@ -1491,6 +1492,7 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 0.94482756, g: 1, b: 0, a: 1}
   playerColors: []
+  playerScores: 00000000000000000000000000000000
 --- !u!1 &1243937021
 GameObject:
   m_ObjectHideFlags: 0

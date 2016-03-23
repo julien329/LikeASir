@@ -117,8 +117,6 @@ public class Gameflow : MonoBehaviour {
         }
         if (i == 2)
         {
-            victoryScript = GameObject.Find("VictoryStuff").GetComponent<VictoryScript>();
-            setPodium();
             gameState = GameState.ENDING;
 
         }
@@ -171,88 +169,20 @@ public class Gameflow : MonoBehaviour {
     public static void GameWon(PlayerController player)
     {
         textMod.text = "Player " + player.playerNumber + " is the Martinist!";
+        //Add 50 points to the winner
+        playerStats.playerScores[player.playerNumber - 1] += 50;
+
         countDown = 3f;
-        fillLeaderBoard(player.GetComponent<PlayerController>().playerNumber);
+        playerStats.fillLeaderBoard();
 
     }
 
     void GameFinished()
     {
         textMod.text = "Time is up!";
-        fillLeaderBoard(5);
+        playerStats.fillLeaderBoard();
         countDown = 3f;
     }
-
-    //Fills an ordered leaderboard
-    static void fillLeaderBoard(int winner)
-    {
-
-        camScript.enabled = false;
-        for (int i = 0; i < 4; i++)
-        {
-            DontDestroyOnLoad(MapHandler.players[i]);
-            leaderBoard[i].First = new GameObject();
-            Debug.Log(leaderBoard.Length);
-            Debug.Log(MapHandler.players[i].name);
-            leaderBoard[i].First = MapHandler.players[i];
-            leaderBoard[i].Second = 100 - MapHandler.players[i].GetComponent<PlayerController>().deathCount;
-            if (winner < 4)
-                leaderBoard[winner].Second += 100;
-            MapHandler.players[i].SetActive(false); //Not sure about that one
-        }
-
-        //Order LeaderBoard;
-        Pair<GameObject, int>[] leaderBoardOrdered = new Pair<GameObject, int>[4];
-        Pair<GameObject, int> bestScore;
-
-        for (int j = 0; j < 4; j++)
-        {
-            bestScore = leaderBoard[0];
-            for (int i = 1; i < 4; i++)
-            {
-                if (bestScore.Second < leaderBoard[i].Second)
-                    bestScore = leaderBoard[i];
-            }
-            leaderBoardOrdered[j] = bestScore;
-            bestScore.Second = -10001;
-        }
-
-        leaderBoard = leaderBoardOrdered;
-
-    }
-
-    public void setPodium()
-    {
-        victoryScript.playerColors = new Color[4];
-        victoryScript.playerHeads = new GameObject[4];
-        victoryScript.playerPlaces = new int[4];
-        victoryScript.playerNumber = 4;
-
-        Text[] victoryTexts = GameObject.Find("ScoreBoard").GetComponentsInChildren<Text>();
-        //Create Players
-        victoryScript.playerColors[0] = Color.red;
-        victoryScript.playerColors[1] = Color.green;
-        victoryScript.playerColors[2] = Color.blue;
-        victoryScript.playerColors[3] = Color.yellow;
-        for (int i = 0; i < 4; i++)
-        {
-            victoryScript.playerPlaces[i] = leaderBoard[i].First.GetComponent<PlayerController>().playerNumber;
-            victoryScript.playerHeads[i] = leaderBoard[i].First.transform.GetChild(0).gameObject;
-
-
-            if (leaderBoard[i].Second != -10000)
-                victoryTexts[i].text = victoryTexts[i].text + " " + victoryScript.playerPlaces[i];
-            else
-                victoryTexts[i].text = "Player " + victoryScript.playerPlaces[i] + " as Sir-Not-Appearing-In-This-Game";
-            Destroy(leaderBoard[i].First);
-        }
-
-        GameObject.Find("robot1").transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = victoryScript.playerColors[victoryScript.playerPlaces[0] - 1];
-        GameObject.Find("robot2").transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = victoryScript.playerColors[victoryScript.playerPlaces[1] - 1];
-        GameObject.Find("robot3").transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = victoryScript.playerColors[victoryScript.playerPlaces[2] - 1];
-        GameObject.Find("robot4").transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = victoryScript.playerColors[victoryScript.playerPlaces[3] - 1];
-    }
-
 
     public class Pair<T, U>
     {

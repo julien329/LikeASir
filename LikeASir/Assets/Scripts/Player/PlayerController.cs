@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
     public MapHandler mapHandler;
+    public PlayerStats playerDisplay;
     public CannonScript cannon;
     public bool[] martiniList;
     public AudioClip jumpSound;
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour {
     void Awake () {
         audioSource = GetComponent<AudioSource>();
         mapHandler = GameObject.Find("MapHandler").GetComponent<MapHandler>();
+        playerDisplay = mapHandler.playerStats;
         cannon = GetComponentInChildren<CannonScript>(true);
         martiniList = new bool[3];
         playerRigidbody = GetComponent<Rigidbody>();
