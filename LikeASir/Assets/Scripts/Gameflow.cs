@@ -6,9 +6,19 @@ using System.Collections.Generic;
 
 public class Gameflow : MonoBehaviour {
 
+    enum GameState
+    {
+        INTRO,
+        PREFIGHT,
+        FIGHT,
+        POSTFIGHT,
+        ENDING
+
+    }
+
     static MapHandler mapHandler;
     static DynamicCamera camScript;
-    static int gameState;
+    static GameState gameState;
     static Text textMod;
     static string textPure;
     static float countDown;
@@ -18,7 +28,9 @@ public class Gameflow : MonoBehaviour {
     AudioSource audioSource;
     public AudioClip introMenuClip, introGameClip, loopClip;
 
+    static public List<int> playersInGame;
     static Pair<GameObject, int>[] leaderBoard; //Player heads and their score. 100 to begin, -1 per death, + 100 for Martinist
+    static public PlayerStats playerStats;
 
     /****************/
     //VictoryScript
@@ -28,6 +40,8 @@ public class Gameflow : MonoBehaviour {
 
     void Start()
     {
+        playerStats = GetComponent<PlayerStats>();
+        playersInGame = new List<int>();
         StopAllCoroutines();
         DontDestroyOnLoad(this.gameObject);
         leaderBoard = new Pair<GameObject, int>[4];
@@ -41,9 +55,7 @@ public class Gameflow : MonoBehaviour {
     public static void nextScene()
     {
         if (SceneManager.GetActiveScene().name == "IntroScene")
-        {
-            isLoaded = false;
-            gameState = 1; //Loading game
+        {         
             SceneManager.LoadScene(1);
             textMod = null;
             countDown = 2f;
@@ -54,26 +66,36 @@ public class Gameflow : MonoBehaviour {
 
     void Update()
     {
-        if (gameState == 0) // Intro Screen
+        if (gameState == GameState.INTRO) // Intro Screen
         {
             if (Input.GetButtonDown("Start") && IntroMenuWindow.nPlayersReady() > 0)
+            {
+                //Check which players are playing
+                for (int i = 0; i < 4; i++)
+                    if (IntroMenuWindow.playersPlaying[i])
+                        playersInGame.Add(i);
                 nextScene();
+            }
+                
         }
-        if (gameState == 1 && isLoaded) //Game on countdown
+        if (gameState == GameState.PREFIGHT) //Game on countdown
         {
             CountDown();
         }
-        if (gameState == 2) // Game running, timer on top.
+        if (gameState == GameState.FIGHT) // Game running, timer on top.
         {
+            //Display the player UI when the game starts
+            GameObject.Find("UICamera").GetComponent<Camera>().cullingMask |= (1 << 10);
             GameTimer();
         }
-        if (gameState == 3)
+        if (gameState == GameState.POSTFIGHT)
             CountDown2();
-        if (gameState == 4)
+        if (gameState == GameState.ENDING)
         {
+            //Loads the beginning of the game
             if (Input.GetButtonDown("Start"))
             {
-                gameState = 0;
+                gameState = GameState.INTRO;
                 SceneManager.LoadScene(0);
                 Destroy(this.gameObject);
             }
@@ -86,8 +108,7 @@ public class Gameflow : MonoBehaviour {
         {
             StopCoroutine(PlayMusicMenu());
             StartCoroutine(PlayMusicGame());
-
-            isLoaded = true;
+            gameState = GameState.PREFIGHT; //Preparing Game
             mapHandler = GameObject.Find("MapHandler").GetComponent<MapHandler>();
             textMod = GameObject.Find("ReadyMessage").GetComponent<Text>();
             camScript = GameObject.Find("Main Camera").GetComponent<DynamicCamera>();
@@ -98,7 +119,7 @@ public class Gameflow : MonoBehaviour {
         {
             victoryScript = GameObject.Find("VictoryStuff").GetComponent<VictoryScript>();
             setPodium();
-            gameState = 4;
+            gameState = GameState.ENDING;
 
         }
     }
@@ -116,7 +137,7 @@ public class Gameflow : MonoBehaviour {
             camScript.enabled = true;
             textMod = GameObject.Find("Timer").GetComponent<Text>();
             //textPure = textMod.text;
-            gameState = 2;
+            gameState = GameState.FIGHT;
 
         }
     }
@@ -141,7 +162,7 @@ public class Gameflow : MonoBehaviour {
 
         if (gameTimer < 0)
         {
-            gameState = 3;
+            gameState = GameState.POSTFIGHT;
             GameFinished();
 
         }

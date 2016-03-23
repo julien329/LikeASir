@@ -8,18 +8,33 @@ public class IntroMenuWindow : MonoBehaviour {
     public int playerNumber;
     static public bool beginLevel;
 
+    Text playerNameTxt;
     Text playerReadyTxt;
     Text pressToPlayTxt;
     GameObject check;
 
-	// Use this for initialization
-	void Start () {
-        beginLevel = false;
+    //Color Select
+    public GameObject playerStatsObject;
+    PlayerStats playerStats;
+    Color currentColor;
+
+    // Use this for initialization
+    void Start () {
         if(playersPlaying == null)
             playersPlaying = new bool[4];
+
+        playerStats = playerStatsObject.GetComponent<PlayerStats>();
+        playerNameTxt = transform.GetChild(0).gameObject.GetComponent<Text>();
+
+        currentColor = Color.gray;
+       
+
+        beginLevel = false;
+
         playerReadyTxt = transform.GetChild(1).gameObject.GetComponent<Text>();
         check = transform.GetChild(3).gameObject;
         pressToPlayTxt = transform.GetChild(2).gameObject.GetComponent<Text>();
+        updateTextColor();
 
     }
 	
@@ -27,7 +42,11 @@ public class IntroMenuWindow : MonoBehaviour {
 	void Update () {
         
         if (Input.GetButtonDown("Fire" + playerNumber))
-            playerReady();    
+        {
+            playerReady();
+            changePlayerColor();
+        }
+                
 	}
 
     static public int nPlayersReady()
@@ -40,7 +59,7 @@ public class IntroMenuWindow : MonoBehaviour {
 
     void playerReady()
     {
-        playersPlaying[playerNumber] = true;
+        playersPlaying[playerNumber-1] = true;
         playerReadyTxt.text = "Ready!";
         pressToPlayTxt.text = "Press Start to play!";
         check.SetActive(true);
@@ -50,6 +69,19 @@ public class IntroMenuWindow : MonoBehaviour {
     {
         beginLevel = true; 
        
+    }
+
+    void changePlayerColor()
+    {
+        currentColor = playerStats.nextColor(currentColor, playerNumber);
+        updateTextColor();
+    }
+
+    void updateTextColor()
+    {
+        playerNameTxt.color = currentColor;
+        playerReadyTxt.color = currentColor;
+        pressToPlayTxt.color = currentColor;
     }
 
 }
