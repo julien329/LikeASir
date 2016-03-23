@@ -2111,7 +2111,7 @@ MonoBehaviour:
   maxSlidingVelocity: 3
   maxFallingVelocity: 25
   stickToWallTime: 0.5
-  speed: 7
+  speed: 8
   jumpForce: 17
   distToGround: 0.85
   grounded: 1

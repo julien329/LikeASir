@@ -133,12 +133,15 @@ public class MapHandler : MonoBehaviour
     Vector3 GetNextSpawn() {
 
         Spawnable spawn;
-
+        // temp fix for infinite loop
+        int iterations = 0;
+        //
         do {
             spawn = spawnPoints.Dequeue();
             spawnPoints.Enqueue(spawn);
+            iterations++;
         }
-        while (!spawn.isSpawnable);
+        while (!spawn.isSpawnable && iterations < 4);
 
         return spawn.position;
     }
