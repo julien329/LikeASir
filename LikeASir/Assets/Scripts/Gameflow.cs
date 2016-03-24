@@ -55,7 +55,7 @@ public class Gameflow : MonoBehaviour {
     {
         if (gameState == GameState.INTRO) // Intro Screen
         {
-            if (Input.GetButtonDown("Start") && IntroMenuWindow.nPlayersReady() > 0)
+            if (Input.GetButtonDown("Start") && IntroMenuWindow.NbPlayersReady() > 0)
             {
                 //Check which players are playing
                 for (int i = 0; i < 4; i++)

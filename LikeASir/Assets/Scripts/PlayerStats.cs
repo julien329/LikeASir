@@ -8,60 +8,23 @@ enum ColorChoice { GREY, BLUE, CYAN, GREEN, MAGENTA, RED, WHITE, YELLOW }
 
 public class PlayerStats : MonoBehaviour {
 
-    public MapHandler mapHandler;
-
-    public Color[] colors;
     public Color[] playerColors;
     public int[] playerScores;
-    // GameObject UIObjects;
-    //IntroMenuWindow introMenu;
-    //In game UI display
+
     Image[] playerPanels;
     Text[] playerNames;
     GameObject[] playerMartini;
     Text[] playerDeaths;
     Text[] playerAmmo;
     Text[] playerScoreText;
-    //Color[] playerColors;
 
-    void Start()
-    {
-        //introMenu = UIObjects.GetComponent<IntroMenuWindow>();
-        playerColors = new Color[4];
-        
-        for(int i =0; i < 4; i++)
-            playerColors[i] = colors[0];
+
+    void Start() {    
+        playerColors = new Color[4] { Color.grey, Color.grey, Color.grey, Color.grey };
     }
 
-	public Color nextColor(Color color, int playerNum)
-    {
-        int i = 0;
-
-        //Find current color index
-        while (i < colors.Length)
-        {
-            if (colors[i].Equals(color))
-                break;
-            i++;
-        }
-
-        //If last color is reached, next one is the first one
-        if (i == colors.Length)
-            i = 1;
-
-        //Iterates through the colors to find the first free one, looping around;
-        while(colorIsInUse(colors[i]))
-        {
-            i++;
-            if (i == colors.Length)
-                i = 1;
-        }
-
-        playerColors[playerNum-1] = colors[i];
-        return colors[i];
-    }
 	
-    //Sets the table sizes for all the players
+    // Sets the game scene table sizes for all the present players
     public void initTables(int nPlayers)
     {
         playerNames = new Text[nPlayers];
@@ -98,14 +61,7 @@ public class PlayerStats : MonoBehaviour {
         playerMartini[i] = GameObject.Find("ItemsP" + (i + 1));
     }
 
-    //Checks if the color is currently used by the player.
-	bool colorIsInUse(Color color)
-    {
-        foreach (Color x in playerColors)
-            if (x.Equals(color))
-                return true;
-        return false;
-    }
+    
 
     void colorsSelected()
     {
@@ -192,8 +148,6 @@ public class PlayerStats : MonoBehaviour {
                 playerNumbers.RemoveAt(j);
             }
         }
-
         return playerOrder;
-
     }
 }
