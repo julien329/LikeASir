@@ -27,19 +27,9 @@ public class SwitchPosPowerUp : ChaoticItem
         MapHandler.players[0].GetComponent<PlayerController>().PlaySound(teleportSound);
     }
 
-    protected override void playerPickUp(PlayerController player)
+    protected override void PickedUp(PlayerController player)
     {
         bringMayhemToTheWorld();
         Destroy(gameObject);
     }
-
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.tag == "Player" && !isPickedUp)
-        {
-            player = col.gameObject;
-            playerPickUp(col.gameObject.GetComponentInChildren<PlayerController>());
-        }
-    }
-
 }

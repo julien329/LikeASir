@@ -167,8 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfa75742f563c5d479ca7b5c549603a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxAmmo: 5
   wepName: Cannon
-  ammo: 5
   projectile: {fileID: 145670, guid: a8d3cea76105a3b40b8c0cc166f1e853, type: 2}
 --- !u!114 &11435794
 MonoBehaviour:

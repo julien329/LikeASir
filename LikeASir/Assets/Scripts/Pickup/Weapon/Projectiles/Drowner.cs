@@ -4,7 +4,7 @@ using System.Collections;
 public class Drowner : MonoBehaviour {
     GameObject acidLake;
     Vector3 initPos;
-    float direction = 1, height, riseDistance = 8f, time = 4f;
+    float riseDistance = 8f, time = 4f;
 
     void Start () {
         acidLake = GameObject.Find("Water");

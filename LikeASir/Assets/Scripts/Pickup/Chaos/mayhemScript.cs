@@ -9,25 +9,15 @@ public class mayhemScript : ChaoticItem
     }
     public override void bringMayhemToTheWorld()
     {
-        foreach(IPlatform p in mapHandler.GetList())
+        foreach(IPlatform p in MapHandler.platforms)
         {
             p.ApplyEffect();
         }
     }
 
-    protected override void playerPickUp(PlayerController player)
+    protected override void PickedUp(PlayerController player)
     {
         bringMayhemToTheWorld();
         Destroy(gameObject);
     }
-
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.tag == "Player" && !isPickedUp)
-        {
-            player = col.gameObject;
-            playerPickUp(col.gameObject.GetComponentInChildren<PlayerController>());
-        }
-    }
-
 }

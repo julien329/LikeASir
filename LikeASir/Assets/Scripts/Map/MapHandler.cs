@@ -4,185 +4,163 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class MapHandler : MonoBehaviour
-{
-    [SerializeField]
-    private int respawnTime = 3;
+public class MapHandler : MonoBehaviour {
     public GameObject playerPrefab;
-
-    //Will hold UI elements of the players
     public PlayerStats playerStats;
+    public float initialSpawnDelay = 10f;
+    public float minSpawnRate = 5f;
+    public float maxSpawnRate = 15f;
 
-    Queue<Spawnable> spawnPoints;
-    List<Spawnable> spawnPointsMartini;
-    List<Spawnable> spawnPointsHats;
+
+    public static Queue<Spawnable> spawnPointsPlayers;
+    public static List<Spawnable> spawnPointsMartinis;
+    public static List<Spawnable> spawnPointsHats;
+    public static List<GameObject> players;
+    public static List<IPlatform> platforms;
+
     List<GameObject> martinisList;
     List<GameObject> hatsList;
 
     public Color[] colors;
 
-    static List<IPlatform> platforms;
-    //Espace de texte
-    public static List<GameObject> players;
-
-    void Start()
-    {
-        playerStats = GameObject.Find("GameFlow").GetComponent<PlayerStats>();
-        spawnPoints = new Queue<Spawnable>();
-        for (int i = 0; i < 4; i++) {
-            spawnPoints.Enqueue(GameObject.Find("PlayerSpawns").transform.GetChild(i).GetComponent<Spawnable>());
-        }
-
-        spawnPointsMartini = new List<Spawnable>();
-        for (int i = 0; i < 6; i++) {
-            spawnPointsMartini.Add(GameObject.Find("MartiniSpawns").transform.GetChild(i).GetComponent<Spawnable>());
-        }
+    // Executed before Start()
+    void Awake() {
+        platforms = new List<IPlatform>();
+        spawnPointsPlayers = new Queue<Spawnable>();
+        spawnPointsMartinis = new List<Spawnable>();
+        spawnPointsHats = new List<Spawnable>();
 
         martinisList = new List<GameObject>();
-        martinisList.Add((GameObject)Resources.Load("Martini/MartiniClean"));
-        martinisList.Add((GameObject)Resources.Load("Martini/OliveClean"));
-        martinisList.Add((GameObject)Resources.Load("Martini/UraniumClean"));
-
-
-        spawnPointsHats = new List<Spawnable>();
-        for (int i = 0; i < 6; i++) {
-            spawnPointsHats.Add(GameObject.Find("HatSpawns").transform.GetChild(i).GetComponent<Spawnable>());
-        }
-
         hatsList = new List<GameObject>();
-        hatsList.Add((GameObject)Resources.Load("Hats/FedoraClean"));
-        hatsList.Add((GameObject)Resources.Load("Hats/TopHatClean"));
+        players = new List<GameObject>();
+    }
 
-        spawnPlayers(Gameflow.playersInGame);
+
+    // Initiation
+    void Start() {
+        playerStats = GameObject.Find("GameFlow").GetComponent<PlayerStats>();
+
+        LoadRessources();
+        SpawnPlayers(Gameflow.playersInGame);
 
         StartCoroutine(ActivatePlatforms());
         StartCoroutine(SpawnMartinis());
         StartCoroutine(SpawnHats());
     }
 
-    public static void AddToList(IPlatform platform)
-    {
-        if (platforms == null)
-            platforms = new List<IPlatform>();
-        platforms.Add(platform);
+
+    // Load gameObject in Ressources folder
+    void LoadRessources() {
+        martinisList.Add((GameObject)Resources.Load("Martini/MartiniClean"));
+        martinisList.Add((GameObject)Resources.Load("Martini/OliveClean"));
+        martinisList.Add((GameObject)Resources.Load("Martini/UraniumClean"));
+
+        hatsList.Add((GameObject)Resources.Load("Hats/FedoraClean"));
+        //hatsList.Add((GameObject)Resources.Load("Hats/TopHatClean"));
     }
 
-    public List<IPlatform> GetList()
-    {
-        return platforms;
-    }
-
-    public void PlayerWins(PlayerController player)
-    {
-        Gameflow.GameWon(player);
-    }
-
-    public void PlayerDied(PlayerController player)
-    {
+    
+    // Manage player deaths
+    public void PlayerDied(PlayerController player) {
         playerStats.PlayerDied(player);
 
-        //What is this line about?--------------------------------------------------------------------------
-        CannonScript cannon = players[player.playerNumber - 1].GetComponentInChildren<CannonScript>();
-
-        //Dead player loses all his items!
-        for (int i = 0; i < 3; i++) {
-            player.martiniList[i] = false;
-            
-        }
+        // Dead player loses all his martinis and weapons
+        player.martiniList = new bool[3];
+        player.cannon.RemoveWeapon();
         playerStats.UpdateItemDisplay(player);
 
-        //POSSIBLE BM TEXT
-
+        // Desactive player and set respawn timer
         player.gameObject.SetActive(false);
         StartCoroutine(RespawnTime(player));
     }
 
-    IEnumerator RespawnTime(PlayerController player)
-    {
+
+    // Used to manage player respawn
+    IEnumerator RespawnTime(PlayerController player) {
         int timer = 0;
-        while(timer < respawnTime)
-        {
+        // Wait for the respawn time
+        while (timer < player.respawnTime) {
             yield return new WaitForSeconds(1f);
             timer++;
         }
 
+        // Spawn to random spawn point and reactivate player
         player.transform.position = GetNextSpawn();
         player.gameObject.SetActive(true);
         playerStats.UpdatePanelColor(player);
     }
 
     
-
+    // Get the next free spawn point
     Vector3 GetNextSpawn() {
-
         Spawnable spawn;
-        // temp fix for infinite loop
         int iterations = 0;
-        //
+        // Look for an free spawnPoint
         do {
-            spawn = spawnPoints.Dequeue();
-            spawnPoints.Enqueue(spawn);
+            spawn = spawnPointsPlayers.Dequeue();
+            spawnPointsPlayers.Enqueue(spawn);
             iterations++;
         }
         while (!spawn.isSpawnable && iterations < 4);
 
-        return spawn.position;
+        return spawn.spawnPosition;
     }
 
+
+    // Activate plaform effets randomly after initial delay
     IEnumerator ActivatePlatforms() {
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(initialSpawnDelay);
 
         while (true) {
             platforms[Random.Range(0, platforms.Count)].ApplyEffect();
-            yield return new WaitForSeconds(Random.Range(5f, 15f));
+            yield return new WaitForSeconds(Random.Range(minSpawnRate, maxSpawnRate));
         }
     }
 
+
+    // Spawn martinis pieces randomly after initial delay
     IEnumerator SpawnMartinis() {
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(initialSpawnDelay);
 
         while (true) {
-            Instantiate(martinisList[Random.Range(0,3)], spawnPointsMartini[Random.Range(0,6)].position, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(5f, 15f));
+            Instantiate(martinisList[Random.Range(0, martinisList.Count)], spawnPointsMartinis[Random.Range(0, spawnPointsMartinis.Count)].spawnPosition, Quaternion.identity);
+            Martini.isSpawned = true;
+            // Wait for the martini to be picked, before spawning an other one
+            yield return new WaitWhile(() => Martini.isSpawned);
+            yield return new WaitForSeconds(Random.Range(minSpawnRate, maxSpawnRate));
         }
     }
 
+
+    // Spawn hats randomly after initial delay
     IEnumerator SpawnHats() {
-        yield return new WaitForSeconds(15f);
-
+        yield return new WaitForSeconds(initialSpawnDelay);
+;
         while (true) {
-            Instantiate(hatsList[Random.Range(0, 2)], spawnPointsHats[Random.Range(0, 6)].position, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(5f, 15f));
+            Instantiate(hatsList[Random.Range(0, hatsList.Count)], spawnPointsHats[Random.Range(0, spawnPointsHats.Count)].spawnPosition, Quaternion.identity);
+            yield return new WaitForSeconds(Random.Range(minSpawnRate, maxSpawnRate));
         }
     }
 
-    public void spawnPlayers(List<int> playersInGame)
-    {
-        players = new List<GameObject>();
 
-        //Inits the UI element tables
+    // Initially spawn all present players
+    public void SpawnPlayers(List<int> playersInGame) {
+        // Initialize the UI element tables
         playerStats.initTables(playersInGame.Count);
 
-        //Get UI elements 
-        //Stat panels
-        //Get Text elements
-        //Set colors (These are set in the editor)
-        //Spawn the players
-        for (int i = 0; i < playersInGame.Count; i++)
-        {
-             
+        // For every prensent players...
+        for (int i = 0; i < playersInGame.Count; i++) {
+            // Instanciate prefab and add it to the list, then set correct player number and add the chosen color
             players.Add((GameObject)Instantiate(playerPrefab, GetNextSpawn(), playerPrefab.transform.rotation));
+            players[i].transform.FindChild("Head").GetComponent<MeshRenderer>().material.color = playerStats.playerColors[i];
             players[i].GetComponent<PlayerController>().playerNumber = i + 1;
             playerStats.initPlayerUI(i);
-            players[i].transform.FindChild("Head").GetComponent<MeshRenderer>().material.color = playerStats.playerColors[i];
-        }
-        Debug.Log(playersInGame.Count);
-        //Erase the displays of the absent players
-        for(int i = playersInGame.Count; i < 4; i++)
-        {
-            GameObject.Find("Player" + (i + 1) + "UI").SetActive(false);
         }
 
+        // Erase the displays of the absent players
+        for (int i = playersInGame.Count; i < 4; i++) {
+            GameObject.Find("Player" + (i + 1) + "UI").SetActive(false);
+        }
     }
 }
 

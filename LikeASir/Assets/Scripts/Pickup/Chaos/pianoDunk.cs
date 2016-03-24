@@ -7,6 +7,8 @@ using System.Text;
 
 public class pianoDunk : ChaoticItem
 {
+    PlayerController player;
+
     void Start()
     {
         Init();
@@ -26,19 +28,10 @@ public class pianoDunk : ChaoticItem
         pianoScript.piano = this;
     }
 
-    protected override void playerPickUp(PlayerController player)
+    protected override void PickedUp(PlayerController player)
     {
+        this.player = player;
         bringMayhemToTheWorld();
         Destroy(gameObject);
     }
-
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.tag == "Player" && !isPickedUp)
-        {
-            player = col.gameObject;
-            playerPickUp(col.gameObject.GetComponentInChildren<PlayerController>());
-        }
-    }
-
 }

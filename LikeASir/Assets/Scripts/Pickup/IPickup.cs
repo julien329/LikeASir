@@ -4,50 +4,38 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public abstract class IPickup : MonoBehaviour
-{
-    protected int lifeTime = 10;
-    protected bool isPickedUp;
-    public bool IsPickedUp { get { return isPickedUp; } set { isPickedUp = value; } }
-    protected GameObject player;
+public abstract class IPickup : MonoBehaviour {
 
-    protected abstract void playerPickUp(PlayerController player);
+    protected int lifeTime = 10;
+    protected bool isPickedUp = false;
+    public bool IsPickedUp { get { return isPickedUp; } set { isPickedUp = value; } }
+
+    // Object picked up by player
+    protected abstract void PickedUp(PlayerController player);
+
 
     //Base init
-    protected virtual void init()
-    {
-        isPickedUp = false;
-        startTimer();
+    protected virtual void init(){
+        if(!isPickedUp)
+            StartCoroutine(DestroyTimer());
     }
 
-    protected virtual bool canBePicked(String tag)
-    {
-        if (Equals(tag, "Player") && !isPickedUp)
-            return true;
-        else
-            return false;
-    }
 
-    public virtual void startTimer()
-    {
-        StartCoroutine(LifeTime());
-    }
-
-    public virtual void onTimerEnd()
-    {
-        if (this.gameObject != null)
-            Destroy(this.gameObject);
-    }
-
-    protected IEnumerator LifeTime()
-    {
+    // Used to destroy the item if not picked during lifetime
+    protected IEnumerator DestroyTimer() {
         int timer = 0;
-        while (timer < lifeTime)
-        {
+        while (timer < lifeTime) {
             timer++;
             yield return new WaitForSeconds(1f);
         }
-        onTimerEnd();
+        Destroy(this.gameObject);
+    }
+
+
+    // On entering collision with other collider
+    protected void OnTriggerEnter(Collider col) {
+        if (col.gameObject.tag == "Player" && !isPickedUp) 
+            PickedUp(col.gameObject.GetComponent<PlayerController>());
     }
 }
 

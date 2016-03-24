@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour {
     [Range(1,4)]
     public int playerNumber = 1;
     public int deathCount = 0;
+    public int respawnTime = 3;
 
     int idleSeconds = 3;
     float rayCastOffsetX;
@@ -56,14 +57,14 @@ public class PlayerController : MonoBehaviour {
     // Used to control player movements
     private void Move() {
         // Get horizontal input value of corresponding playerNumber
-        float h = Input.GetAxisRaw("Horizontal" + playerNumber);
+        float horizontal = Input.GetAxisRaw("Horizontal" + playerNumber);
         
         // If the player has moved, reset the idle timer
-        if (h != 0)
+        if (horizontal != 0)
             idleSeconds = 0;
 
         // Set the movement vector based on the player input.
-        Vector3 move = new Vector3(h, 0f, 0f);
+        Vector3 move = new Vector3(horizontal, 0f, 0f);
         // Move current position to target position, smoothed and scaled by speed
         playerRigidbody.MovePosition(transform.position + move * speed * Time.deltaTime);
 
@@ -71,7 +72,7 @@ public class PlayerController : MonoBehaviour {
         playerRigidbody.velocity = Vector3.ClampMagnitude(playerRigidbody.velocity, maxFallingVelocity);
 
         // Set direction bool for animation in mechanim
-        anim.SetInteger("Horizontal", (int)h);
+        anim.SetInteger("Horizontal", (int)horizontal);
     }
 
 

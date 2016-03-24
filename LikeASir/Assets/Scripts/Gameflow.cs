@@ -4,17 +4,10 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
+enum GameState { INTRO, PREFIGHT, FIGHT, POSTFIGHT, ENDING
+}
+
 public class Gameflow : MonoBehaviour {
-
-    enum GameState
-    {
-        INTRO,
-        PREFIGHT,
-        FIGHT,
-        POSTFIGHT,
-        ENDING
-
-    }
 
     static MapHandler mapHandler;
     static DynamicCamera camScript;
@@ -23,7 +16,6 @@ public class Gameflow : MonoBehaviour {
     static string textPure;
     static float countDown;
     static float gameTimer;
-    static bool isLoaded;
 
     AudioSource audioSource;
     public AudioClip introMenuClip, introGameClip, loopClip;
@@ -31,11 +23,6 @@ public class Gameflow : MonoBehaviour {
     static public List<int> playersInGame;
     static Pair<GameObject, int>[] leaderBoard; //Player heads and their score. 100 to begin, -1 per death, + 100 for Martinist
     static public PlayerStats playerStats;
-
-    /****************/
-    //VictoryScript
-    /****************/
-    VictoryScript victoryScript;
 
 
     void Start()
@@ -129,7 +116,7 @@ public class Gameflow : MonoBehaviour {
         textMod.text = textPure + "\n" + num.ToString();
         if (countDown < 0)
         {
-            isLoaded = false;
+            //isLoaded = false;
             mapHandler.enabled = true;
             textMod.transform.parent.gameObject.SetActive(false);
             camScript.enabled = true;

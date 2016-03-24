@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+public enum MartiniPiece { GLASS, OLIVE, URANIUM, TOTAL }
+
+
 public class Martini : IPickup
 {
     public MartiniPiece martiniType;
     public AudioClip glassSound, oliveSound, uraniumSound;
+    public static bool isSpawned = false;
 
-
-    void Start()
+    protected override void PickedUp(PlayerController player)
     {
-        startTimer();
-    }
-
-    protected override void playerPickUp(PlayerController player)
-    {
+        // Play sound according to the picked martini
         switch (martiniType) {
             case MartiniPiece.GLASS :
                 player.PlaySound(glassSound);
@@ -26,34 +25,15 @@ public class Martini : IPickup
                 break;
         }
 
-
-        if (!player.martiniList[(int)martiniType])
-        {
-            isPickedUp = true;
+        // If the player doesn't have the piece, add to his inventory and update UI
+        if (!player.martiniList[(int)martiniType]) {
             player.martiniList[(int)martiniType] = true;
-            Destroy(this.gameObject);
             player.mapHandler.playerStats.UpdateItemDisplay(player);
         }
-        else
-            Destroy(this.gameObject);
-            
-    }
 
-    public enum MartiniPiece
-    {
-        GLASS,
-        OLIVE,
-        URANIUM,
-        TOTAL        
+        // Destroy object in game
+        isSpawned = false;
+        Destroy(this.gameObject);       
     }
-
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.tag == "Player")
-        {
-            playerPickUp(col.gameObject.GetComponent<PlayerController>());
-        }
-    }
-
 }
 

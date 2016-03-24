@@ -3,27 +3,13 @@ using System.Collections;
 
 public class DrownScript : ChaoticItem
 {
-
-    public override void bringMayhemToTheWorld()
-    {
-        GameObject drowner = (GameObject)Instantiate(Resources.Load("drowner")) as GameObject;
+    public override void bringMayhemToTheWorld() {
+        Instantiate(Resources.Load("drowner"));
     }
 
-    protected override void playerPickUp(PlayerController player)
-    {
+    protected override void PickedUp(PlayerController player) {
         isPickedUp = true;
         bringMayhemToTheWorld();
         Destroy(gameObject);
     }
-
-    void OnTriggerEnter(Collider col)
-    {
-        if (col.gameObject.tag == "Player" && !isPickedUp)
-        {
-            player = col.gameObject;
-            playerPickUp(col.gameObject.GetComponentInChildren<PlayerController>());
-        }
-    }
-
-    
 }

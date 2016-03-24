@@ -93,7 +93,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 141636}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3451, y: 0.26349, z: -0.3033}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_Children:
   - {fileID: 485736}
@@ -308,6 +308,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   martiniType: 2
+  glassSound: {fileID: 8300000, guid: 6389377c78eaeec469e81c0be089a654, type: 3}
+  oliveSound: {fileID: 8300000, guid: 31c93c91c9274a849abe3a794f7591ac, type: 3}
+  uraniumSound: {fileID: 8300000, guid: f72f44c408ce7244388e735bd5bea020, type: 3}
 --- !u!136 &13614698
 CapsuleCollider:
   m_ObjectHideFlags: 1

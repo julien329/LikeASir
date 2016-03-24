@@ -219,7 +219,6 @@ GameObject:
   - 33: {fileID: 3325188}
   - 23: {fileID: 2368544}
   - 135: {fileID: 13596484}
-  - 114: {fileID: 11435796}
   m_Layer: 9
   m_Name: Plane
   m_TagString: Untagged
@@ -319,7 +318,6 @@ GameObject:
   - 33: {fileID: 3362878}
   - 23: {fileID: 2375748}
   - 135: {fileID: 13563128}
-  - 114: {fileID: 11464610}
   m_Layer: 9
   m_Name: Hat
   m_TagString: Untagged
@@ -917,7 +915,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 139024}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.1572447, y: 3.3543115, z: -6.766159}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children:
   - {fileID: 431262}
@@ -2074,19 +2072,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11435796
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 152400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8e4ad93b0fbd4c4eace3af49f1a7bde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wepName: TopHatClean
-  magnetSound: {fileID: 0}
 --- !u!114 &11452428
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2099,6 +2084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapHandler: {fileID: 0}
+  playerDisplay: {fileID: 0}
   cannon: {fileID: 0}
   martiniList: 
   jumpSound: {fileID: 8300000, guid: c4869e935bb7780428395263c8f6b4ec, type: 3}
@@ -2117,19 +2103,6 @@ MonoBehaviour:
   grounded: 1
   playerNumber: 1
   deathCount: 0
---- !u!114 &11464610
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 660a793e92553be479f1abb04b522a6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wepName: FedoraClean
-  shootBulletSound: {fileID: 0}
 --- !u!114 &11492892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2162,7 +2135,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 155184}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.0106143
@@ -2174,7 +2147,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152400}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.00956039

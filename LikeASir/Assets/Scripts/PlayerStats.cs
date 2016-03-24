@@ -3,20 +3,10 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
+enum ColorChoice { GREY, BLUE, CYAN, GREEN, MAGENTA, RED, WHITE, YELLOW }
+
+
 public class PlayerStats : MonoBehaviour {
-
-    enum ColorChoice
-    {
-        GREY,
-        BLUE,
-        CYAN,
-        GREEN,
-        MAGENTA,
-        RED,
-        WHITE,
-        YELLOW
-
-    }
 
     public MapHandler mapHandler;
 
@@ -86,7 +76,6 @@ public class PlayerStats : MonoBehaviour {
     //Initiates the display for a specific player
     public void initPlayerUI(int i)
     {
-        Debug.Log(i);
         //playerColors[i] = Gameflow.playerStats.playerColors[i];
         GameObject UI = GameObject.Find("Player" + (i + 1) + "UI");
         playerPanels[i] = UI.GetComponent<Image>();
@@ -160,7 +149,7 @@ public class PlayerStats : MonoBehaviour {
         }
 
         if (victory >= 3)
-            mapHandler.PlayerWins(player);
+            Gameflow.GameWon(player);
     }
 
     public void UpdatePanelColor(PlayerController player)
