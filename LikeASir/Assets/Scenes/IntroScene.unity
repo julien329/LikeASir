@@ -530,7 +530,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 3
-  playerStatsObject: {fileID: 1185555073}
 --- !u!1 &569180031
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,7 +729,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 1
-  playerStatsObject: {fileID: 1185555073}
 --- !u!114 &648815649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1284,7 +1282,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 2
-  playerStatsObject: {fileID: 1185555073}
 --- !u!1 &1183543109
 GameObject:
   m_ObjectHideFlags: 0
@@ -1481,18 +1478,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735584215b6e0f64dac4603e7ea921db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapHandler: {fileID: 0}
-  colors:
-  - {r: 0.5735294, g: 0.5735294, b: 0.5735294, a: 1}
-  - {r: 0, g: 0.13103437, b: 1, a: 1}
-  - {r: 0, g: 0.7931037, b: 1, a: 1}
-  - {r: 0.09083046, g: 0.58823526, b: 0.11484315, a: 1}
-  - {r: 0.6102941, g: 0.017949844, b: 0.54493195, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 0.94482756, g: 1, b: 0, a: 1}
   playerColors: []
-  playerScores: 00000000000000000000000000000000
+  playerScores: 
+  playerDeathCounts: 
 --- !u!1 &1243937021
 GameObject:
   m_ObjectHideFlags: 0
@@ -1805,7 +1793,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 4
-  playerStatsObject: {fileID: 1185555073}
 --- !u!1 &1359698723
 GameObject:
   m_ObjectHideFlags: 0
@@ -2010,7 +1997,6 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

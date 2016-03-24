@@ -3,19 +3,17 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class IntroMenuWindow : MonoBehaviour {
+public class IntroPlayerState : MonoBehaviour {
 
     public static bool[] playersPlaying;
-    public int playerNumber;
     static public bool beginLevel;
-    Queue<Color> availableColors;
+    public int playerNumber;
 
+    Queue<Color> availableColors;
     Text playerNameTxt;
     Text playerReadyTxt;
     Text pressToPlayTxt;
     GameObject check;
-
-    //public GameObject playerStatsObject;
     PlayerStats playerStats;
     Color currentColor = Color.gray;
 
@@ -114,7 +112,7 @@ public class IntroMenuWindow : MonoBehaviour {
     }
 
 
-    //Checks if the color is currently used by the player.
+    // Checks if the color is currently used by the player.
     bool ColorIsInUse(Color color) {
         foreach (Color possibleColor in playerStats.playerColors)
             if (possibleColor.Equals(color))

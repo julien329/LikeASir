@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour {
     public bool grounded = true;
     [Range(1,4)]
     public int playerNumber = 1;
-    public int deathCount = 0;
     public int respawnTime = 3;
 
     int idleSeconds = 3;

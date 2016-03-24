@@ -62,7 +62,7 @@ public class MapHandler : MonoBehaviour {
     
     // Manage player deaths
     public void PlayerDied(PlayerController player) {
-        playerStats.PlayerDied(player);
+        playerStats.PlayerDied(player.playerNumber);
 
         // Dead player loses all his martinis and weapons
         player.martiniList = new bool[3];
@@ -87,7 +87,7 @@ public class MapHandler : MonoBehaviour {
         // Spawn to random spawn point and reactivate player
         player.transform.position = GetNextSpawn();
         player.gameObject.SetActive(true);
-        playerStats.UpdatePanelColor(player);
+        playerStats.UpdatePanelColor(player.playerNumber);
     }
 
     
@@ -146,7 +146,7 @@ public class MapHandler : MonoBehaviour {
     // Initially spawn all present players
     public void SpawnPlayers(List<int> playersInGame) {
         // Initialize the UI element tables
-        playerStats.initTables(playersInGame.Count);
+        playerStats.InitTables(playersInGame.Count);
 
         // For every prensent players...
         for (int i = 0; i < playersInGame.Count; i++) {
@@ -154,7 +154,7 @@ public class MapHandler : MonoBehaviour {
             players.Add((GameObject)Instantiate(playerPrefab, GetNextSpawn(), playerPrefab.transform.rotation));
             players[i].transform.FindChild("Head").GetComponent<MeshRenderer>().material.color = playerStats.playerColors[i];
             players[i].GetComponent<PlayerController>().playerNumber = i + 1;
-            playerStats.initPlayerUI(i);
+            playerStats.InitPlayerUI(i + 1);
         }
 
         // Erase the displays of the absent players

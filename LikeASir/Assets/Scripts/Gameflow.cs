@@ -55,11 +55,11 @@ public class Gameflow : MonoBehaviour {
     {
         if (gameState == GameState.INTRO) // Intro Screen
         {
-            if (Input.GetButtonDown("Start") && IntroMenuWindow.NbPlayersReady() > 0)
+            if (Input.GetButtonDown("Start") && IntroPlayerState.NbPlayersReady() > 0)
             {
                 //Check which players are playing
                 for (int i = 0; i < 4; i++)
-                    if (IntroMenuWindow.playersPlaying[i])
+                    if (IntroPlayerState.playersPlaying[i])
                         playersInGame.Add(i);
                 nextScene();
             }
@@ -116,7 +116,6 @@ public class Gameflow : MonoBehaviour {
         textMod.text = textPure + "\n" + num.ToString();
         if (countDown < 0)
         {
-            //isLoaded = false;
             mapHandler.enabled = true;
             textMod.transform.parent.gameObject.SetActive(false);
             camScript.enabled = true;
@@ -187,6 +186,8 @@ public class Gameflow : MonoBehaviour {
         public U Second { get; set; }
     };
 
+
+    // Play the menu music
     IEnumerator PlayMusicMenu() {
         audioSource.clip = introMenuClip;
         audioSource.Play();
@@ -199,6 +200,8 @@ public class Gameflow : MonoBehaviour {
         audioSource.loop = true;
     }
 
+
+    // Play the in game music
     IEnumerator PlayMusicGame() {
 
         audioSource.clip = introGameClip;
