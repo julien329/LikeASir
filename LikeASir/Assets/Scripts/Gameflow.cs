@@ -4,18 +4,17 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-enum GameState { INTRO, PREFIGHT, FIGHT, POSTFIGHT, ENDING
-}
+enum GameState { INTRO, PREFIGHT, FIGHT, POSTFIGHT, ENDING, LOADING }
 
 public class Gameflow : MonoBehaviour {
 
     static MapHandler mapHandler;
-    static DynamicCamera camScript;
+    static DynamicCamera mainCamera;
     static GameState gameState;
     static Text textMod;
     static string textPure;
-    static float countDown;
-    static float gameTimer;
+    static int countDown;
+    static int gameTimer;
 
     AudioSource audioSource;
     public AudioClip introMenuClip, introGameClip, loopClip;
@@ -25,166 +24,121 @@ public class Gameflow : MonoBehaviour {
     static public PlayerStats playerStats;
 
 
-    void Start()
-    {
+    void Start() {
+        DontDestroyOnLoad(this.gameObject);
         playerStats = GetComponent<PlayerStats>();
         playersInGame = new List<int>();
-        StopAllCoroutines();
-        DontDestroyOnLoad(this.gameObject);
         leaderBoard = new Pair<GameObject, int>[4];
         for (int i = 0; i < 4; i++)
             leaderBoard[i] = new Pair<GameObject, int>();
 
         audioSource = GetComponent<AudioSource>();
+
+        StartCoroutine(Intro());
         StartCoroutine(PlayMusicMenu());
     }
 
-    public static void nextScene()
-    {
-        if (SceneManager.GetActiveScene().name == "IntroScene")
-        {         
-            SceneManager.LoadScene(1);
-            textMod = null;
-            countDown = 2f;
-            gameTimer = 60f;
 
-        }
-    }
-
-    void Update()
-    {
-        if (gameState == GameState.INTRO) // Intro Screen
-        {
-            if (Input.GetButtonDown("Start") && IntroPlayerState.NbPlayersReady() > 0)
-            {
+    IEnumerator Intro() {
+        while(gameState == GameState.INTRO) {
+            if (Input.GetButtonDown("Start") && IntroPlayerState.NbPlayersReady() > 0) {
                 //Check which players are playing
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++) {
                     if (IntroPlayerState.playersPlaying[i])
                         playersInGame.Add(i);
-                nextScene();
+                }
+                gameState = GameState.LOADING;
             }
-                
+            yield return null;
         }
-        if (gameState == GameState.PREFIGHT) //Game on countdown
-        {
-            CountDown();
+        StartCoroutine(Prefight());
+    }
+
+
+    IEnumerator Prefight() {
+        SceneManager.LoadScene(1);
+
+        yield return new WaitUntil(() => gameState == GameState.PREFIGHT);
+
+        countDown = 2;
+        textMod.text = textPure + "\n" + countDown.ToString();
+
+        while (gameState == GameState.PREFIGHT) {
+            yield return new WaitForSeconds(1f);
+
+            countDown--;
+            textMod.text = textPure + "\n" + countDown.ToString();
+
+            if (countDown == 0) {
+                yield return new WaitForSeconds(1f);
+                textMod.text = textPure + "\n" + "Fight!";
+                yield return new WaitForSeconds(1f);
+
+                mapHandler.enabled = true;
+                textMod.transform.parent.gameObject.SetActive(false);
+                mainCamera.enabled = true;
+                textMod = GameObject.Find("Timer").GetComponent<Text>();
+                gameState = GameState.FIGHT;   
+            }
+            
         }
-        if (gameState == GameState.FIGHT) // Game running, timer on top.
-        {
-            //Display the player UI when the game starts
-            GameObject.Find("UICamera").GetComponent<Camera>().cullingMask |= (1 << 10);
-            GameTimer();
+        StartCoroutine(Fight());
+    }
+
+
+    IEnumerator Fight() {
+        GameObject.Find("UICamera").GetComponent<Camera>().cullingMask |= (1 << 10);
+        gameTimer = 10;
+        textMod.text = gameTimer.ToString();  
+
+        while (gameState == GameState.FIGHT) {
+            yield return new WaitForSeconds(1f);
+
+            gameTimer--;
+            textMod.text = gameTimer.ToString();
+
+            if (gameTimer == 0) {
+                textMod.text = "Time is up!";
+                //playerStats.fillLeaderBoard();  // NOT WORKING
+                gameState = GameState.POSTFIGHT;
+            }
         }
-        if (gameState == GameState.POSTFIGHT)
-            CountDown2();
-        if (gameState == GameState.ENDING)
-        {
-            //Loads the beginning of the game
-            if (Input.GetButtonDown("Start"))
-            {
+        StartCoroutine(PostFight());
+    }
+
+
+    IEnumerator PostFight() {
+        countDown = 3;
+        textMod.text = textPure + "\n" + countDown.ToString();
+        
+        while (gameState == GameState.POSTFIGHT) {
+            yield return new WaitForSeconds(1f);
+
+            countDown--;
+            textMod.text = textPure + "\n" + countDown.ToString();
+
+            if (countDown == 0)
+                gameState = GameState.LOADING;
+        }
+        StartCoroutine(Ending());
+    }
+          
+       
+    IEnumerator Ending() {
+        SceneManager.LoadScene(2);
+
+        yield return new WaitUntil(() => gameState == GameState.ENDING);
+
+        while (gameState == GameState.ENDING) {
+            yield return null;
+
+            if (Input.GetButtonDown("Start")) {
                 gameState = GameState.INTRO;
                 SceneManager.LoadScene(0);
                 Destroy(this.gameObject);
             }
-                
         }
     }
-    void OnLevelWasLoaded(int i)
-    {
-        if (i == 1)
-        {
-            StopCoroutine(PlayMusicMenu());
-            StartCoroutine(PlayMusicGame());
-            gameState = GameState.PREFIGHT; //Preparing Game
-            mapHandler = GameObject.Find("MapHandler").GetComponent<MapHandler>();
-            textMod = GameObject.Find("ReadyMessage").GetComponent<Text>();
-            camScript = GameObject.Find("Main Camera").GetComponent<DynamicCamera>();
-
-            textPure = textMod.text;
-        }
-        if (i == 2)
-        {
-            gameState = GameState.ENDING;
-
-        }
-    }
-
-    void CountDown()
-    {
-        countDown -= Time.deltaTime;
-        int num = (int)countDown;
-        textMod.text = textPure + "\n" + num.ToString();
-        if (countDown < 0)
-        {
-            mapHandler.enabled = true;
-            textMod.transform.parent.gameObject.SetActive(false);
-            camScript.enabled = true;
-            textMod = GameObject.Find("Timer").GetComponent<Text>();
-            //textPure = textMod.text;
-            gameState = GameState.FIGHT;
-
-        }
-    }
-
-    void CountDown2()
-    {
-        countDown -= Time.deltaTime;
-        int num = (int)countDown;
-        textMod.text = textPure + "\n" + num.ToString();
-        if (countDown < 0)
-        {
-
-            SceneManager.LoadScene(2);
-        }
-    }
-
-    void GameTimer()
-    {
-        gameTimer -= Time.deltaTime;
-        int num = (int)gameTimer;
-        textMod.text = num.ToString();
-
-        if (gameTimer < 0)
-        {
-            gameState = GameState.POSTFIGHT;
-            GameFinished();
-
-        }
-    }
-
-    public static void GameWon(PlayerController player)
-    {
-        textMod.text = "Player " + player.playerNumber + " is the Martinist!";
-        //Add 50 points to the winner
-        playerStats.playerScores[player.playerNumber - 1] += 50;
-
-        countDown = 3f;
-        playerStats.fillLeaderBoard();
-
-    }
-
-    void GameFinished()
-    {
-        textMod.text = "Time is up!";
-        playerStats.fillLeaderBoard();
-        countDown = 3f;
-    }
-
-    public class Pair<T, U>
-    {
-        public Pair()
-        {
-        }
-
-        public Pair(T first, U second)
-        {
-            this.First = first;
-            this.Second = second;
-        }
-
-        public T First { get; set; }
-        public U Second { get; set; }
-    };
 
 
     // Play the menu music
@@ -215,4 +169,53 @@ public class Gameflow : MonoBehaviour {
         audioSource.loop = true;
     }
 
+
+    void OnLevelWasLoaded(int i) {
+        if (i == 1) {
+            StopCoroutine(PlayMusicMenu());
+            StartCoroutine(PlayMusicGame());
+            gameState = GameState.PREFIGHT;
+            mapHandler = GameObject.Find("MapHandler").GetComponent<MapHandler>();
+            textMod = GameObject.Find("ReadyMessage").GetComponent<Text>();
+            mainCamera = GameObject.Find("Main Camera").GetComponent<DynamicCamera>();
+
+            textPure = textMod.text;
+        }
+        if (i == 2) {
+            gameState = GameState.ENDING;
+        }
+    }
+
+
+    ///////////////////NOT CHECKED//////////////////////
+
+
+    public static void GameWon(PlayerController player)
+    {
+        textMod.text = "Player " + player.playerNumber + " is the Martinist!";
+        //Add 50 points to the winner
+        playerStats.playerScores[player.playerNumber - 1] += 50;
+
+        countDown = 3;
+        playerStats.fillLeaderBoard();
+
+    }
+
+    void GameFinished() {
+        textMod.text = "Time is up!";
+        playerStats.fillLeaderBoard();
+        countDown = 3;
+    }
+
+    public class Pair<T, U> {
+        public Pair() { }
+
+        public Pair(T first, U second) {
+            this.First = first;
+            this.Second = second;
+        }
+
+        public T First { get; set; }
+        public U Second { get; set; }
+    };
 }
