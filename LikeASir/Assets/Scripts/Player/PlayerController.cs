@@ -26,7 +26,8 @@ public class PlayerController : MonoBehaviour {
     public float distToGround = 0.85f;
     public bool grounded = true;
     [Range(1,4)]
-    public int playerNumber = 1;
+    public int playerNumber = 0;
+    public int inputNumber = 0;
     public int respawnTime = 3;
 
     int idleSeconds = 3;
@@ -56,7 +57,7 @@ public class PlayerController : MonoBehaviour {
     // Used to control player movements
     private void Move() {
         // Get horizontal input value of corresponding playerNumber
-        float horizontal = Input.GetAxisRaw("Horizontal" + playerNumber);
+        float horizontal = Input.GetAxisRaw("Horizontal" + inputNumber);
         
         // If the player has moved, reset the idle timer
         if (horizontal != 0)
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour {
     // Used to control jumping
     private void Jump() {
         // If the jump intput is pressed and the player is grounded...
-        if (Input.GetButtonDown("Jump" + playerNumber) && grounded) {
+        if (Input.GetButtonDown("Jump" + inputNumber) && grounded) {
             // Set grounded to false, and save lastWallTouched in lastWallJumped (used for wallJumping) (null if not wallJumping)
             lastWallJumped = lastWallTouched;
             grounded = false;

@@ -5,6 +5,8 @@ public class DynamicCamera : MonoBehaviour {
 
     public float visibleOffset = 5;
     public float moveSmoothIntensity = 5;
+    public float minZoom = 12;
+    public float maxZoom = 50;
     float minX, minY, maxX, maxY;
     float zoomLevel;
     Camera mainCamera;
@@ -33,7 +35,6 @@ public class DynamicCamera : MonoBehaviour {
             centerX = 0;
         else
             centerX = (minX + maxX) / 2;
-
 
         if (minY == Mathf.Infinity || maxY == -Mathf.Infinity)
             centerY = 10;
@@ -67,8 +68,8 @@ public class DynamicCamera : MonoBehaviour {
         float neededZoomY = height * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
         float neededZoomX = (width / mainCamera.aspect) * 0.5f / Mathf.Tan(mainCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
 
-        neededZoomY = Mathf.Clamp(neededZoomY, 10, 50);
-        neededZoomX = Mathf.Clamp(neededZoomX, 10, 50);
+        neededZoomY = Mathf.Clamp(neededZoomY, minZoom, maxZoom);
+        neededZoomX = Mathf.Clamp(neededZoomX, minZoom, maxZoom);
 
         return Mathf.Max(neededZoomX, neededZoomY);
     }

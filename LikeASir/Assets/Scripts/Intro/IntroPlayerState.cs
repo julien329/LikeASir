@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 public class IntroPlayerState : MonoBehaviour {
 
-    public static bool[] playersPlaying;
-    static public bool beginLevel;
-    public int playerNumber;
+    public int playerNumber = 0;
+    public int inputNumber = 0;
+    bool ready;
 
     Queue<Color> availableColors;
     Text playerNameTxt;
@@ -17,18 +17,18 @@ public class IntroPlayerState : MonoBehaviour {
     PlayerStats playerStats;
     Color currentColor = Color.gray;
 
-    // Use this for initialization
-    void Start () {
-        playersPlaying = new bool[4];
-        
-        SetAvailableColors();
 
+    void Awake() {
         playerStats = GameObject.Find("GameFlow").GetComponent<PlayerStats>();
         playerNameTxt = transform.GetChild(0).gameObject.GetComponent<Text>();
         playerReadyTxt = transform.GetChild(1).gameObject.GetComponent<Text>();
         pressToPlayTxt = transform.GetChild(2).gameObject.GetComponent<Text>();
         check = transform.GetChild(3).gameObject;
-        
+    }
+
+
+    void Start () {
+        SetAvailableColors();    
         UpdateTextColor();
     }
 
@@ -49,43 +49,28 @@ public class IntroPlayerState : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {  
-        if (Input.GetButtonDown("Fire" + playerNumber)) {
-            PlayerReady();
+        if (inputNumber != 0 && Input.GetButtonDown("Fire" + inputNumber)) {
+            //PlayerReady();
             ChangePlayerColor();
         }       
 	}
 
 
-    // Check how many players are ready to play
-    static public int NbPlayersReady(){
-        int nbReady = 0;
-        foreach (bool player in playersPlaying) {
-            if (player)
-                nbReady++;
-        }
-        return nbReady;
-    }
-
-
     // Put player in ready state
     void PlayerReady() {
-        playersPlaying[playerNumber-1] = true;
-        // Update player hud text and activate checkmark
-        playerReadyTxt.text = "Ready!";
-        pressToPlayTxt.text = "Press Start to play!";
-        check.SetActive(true);
-    }
-
-
-    // Start the game
-    void StartGame() {
-        beginLevel = true; 
-       
+        if (!ready) {
+            ready = true;
+            //playersPlaying[playerNumber - 1] = true;
+            // Update player hud text and activate checkmark
+            playerReadyTxt.text = "Ready!";
+            pressToPlayTxt.text = "Press Start to play!";
+            check.SetActive(true);
+        }
     }
 
 
     // Get next available color and update HUD color
-    void ChangePlayerColor() {
+    public void ChangePlayerColor() {
         currentColor = NextColor();
         playerStats.playerColors[playerNumber - 1] = currentColor;
         UpdateTextColor();

@@ -8,47 +8,73 @@ enum GameState { INTRO, PREFIGHT, FIGHT, POSTFIGHT, ENDING, LOADING }
 
 public class Gameflow : MonoBehaviour {
 
-    static MapHandler mapHandler;
-    static DynamicCamera mainCamera;
-    static GameState gameState;
-    static Text textMod;
-    static string textPure;
-    static int countDown;
-    static int gameTimer;
+    MapHandler mapHandler;
+    DynamicCamera mainCamera;
+    GameState gameState;
+    Text textMod;
+    string textPure;
+    int countDown;
+    int gameTimer;
 
     AudioSource audioSource;
     public AudioClip introMenuClip, introGameClip, loopClip;
 
-    static public List<int> playersInGame;
-    static Pair<GameObject, int>[] leaderBoard; //Player heads and their score. 100 to begin, -1 per death, + 100 for Martinist
-    static public PlayerStats playerStats;
+    Pair<GameObject, int>[] leaderBoard;
+    public PlayerStats playerStats;
+
+    List<IntroPlayerState> playersUI;
+    int nbInputs = 0;
+    bool[] inputsDetected;
+    int nextPlayerNumber = 1;
+    int maxNbPlayers = 4;
 
 
-    void Start() {
-        DontDestroyOnLoad(this.gameObject);
+    void Awake() {
         playerStats = GetComponent<PlayerStats>();
-        playersInGame = new List<int>();
         leaderBoard = new Pair<GameObject, int>[4];
         for (int i = 0; i < 4; i++)
             leaderBoard[i] = new Pair<GameObject, int>();
 
         audioSource = GetComponent<AudioSource>();
 
+        inputsDetected = new bool[4];
+        playersUI = new List<IntroPlayerState>();
+    }
+
+
+    void Start() {
+        DontDestroyOnLoad(this.gameObject);
+
         StartCoroutine(Intro());
         StartCoroutine(PlayMusicMenu());
     }
 
 
+    public void CheckForInputs() {
+        if (nbInputs < maxNbPlayers) {
+            for (int i = 0; i < maxNbPlayers; i++) {
+                int playerNumber = i + 1;
+                if (Input.GetButtonDown("Fire"+ playerNumber) && !inputsDetected[playerNumber - 1]) {
+                    playersUI.Add(GameObject.Find("Player" + nextPlayerNumber + "UI").GetComponent<IntroPlayerState>());
+                    playersUI[playersUI.Count - 1].inputNumber = playerNumber;
+                    playersUI[playersUI.Count - 1].playerNumber = nextPlayerNumber;
+                    playersUI[playersUI.Count - 1].ChangePlayerColor();
+
+                    nextPlayerNumber++;
+                    inputsDetected[playerNumber - 1] = true;
+                }
+            }
+        }
+    }
+
+
     IEnumerator Intro() {
         while(gameState == GameState.INTRO) {
-            if (Input.GetButtonDown("Start") && IntroPlayerState.NbPlayersReady() > 0) {
-                //Check which players are playing
-                for (int i = 0; i < 4; i++) {
-                    if (IntroPlayerState.playersPlaying[i])
-                        playersInGame.Add(i);
-                }
+            CheckForInputs();
+
+            if (playersUI.Count > 0 && Input.GetButtonDown("Start"))
                 gameState = GameState.LOADING;
-            }
+
             yield return null;
         }
         StartCoroutine(Prefight());
@@ -59,6 +85,8 @@ public class Gameflow : MonoBehaviour {
         SceneManager.LoadScene(1);
 
         yield return new WaitUntil(() => gameState == GameState.PREFIGHT);
+
+        mapHandler.SpawnPlayers(playersUI);
 
         countDown = 2;
         textMod.text = textPure + "\n" + countDown.ToString();
@@ -79,8 +107,7 @@ public class Gameflow : MonoBehaviour {
                 mainCamera.enabled = true;
                 textMod = GameObject.Find("Timer").GetComponent<Text>();
                 gameState = GameState.FIGHT;   
-            }
-            
+            } 
         }
         StartCoroutine(Fight());
     }
@@ -88,7 +115,7 @@ public class Gameflow : MonoBehaviour {
 
     IEnumerator Fight() {
         GameObject.Find("UICamera").GetComponent<Camera>().cullingMask |= (1 << 10);
-        gameTimer = 10;
+        gameTimer = 90;
         textMod.text = gameTimer.ToString();  
 
         while (gameState == GameState.FIGHT) {
@@ -190,7 +217,7 @@ public class Gameflow : MonoBehaviour {
     ///////////////////NOT CHECKED//////////////////////
 
 
-    public static void GameWon(PlayerController player)
+    public void GameWon(PlayerController player)
     {
         textMod.text = "Player " + player.playerNumber + " is the Martinist!";
         //Add 50 points to the winner
@@ -206,16 +233,4 @@ public class Gameflow : MonoBehaviour {
         playerStats.fillLeaderBoard();
         countDown = 3;
     }
-
-    public class Pair<T, U> {
-        public Pair() { }
-
-        public Pair(T first, U second) {
-            this.First = first;
-            this.Second = second;
-        }
-
-        public T First { get; set; }
-        public U Second { get; set; }
-    };
 }

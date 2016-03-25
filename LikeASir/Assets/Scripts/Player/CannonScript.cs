@@ -17,7 +17,7 @@ public class CannonScript : MonoBehaviour
 
     void Update() {
         // Calculate the triggerAxis
-        float vertical = Input.GetAxisRaw("LeftVertical" + player.playerNumber);
+        float vertical = Input.GetAxisRaw("LeftVertical" + player.inputNumber);
 
         // If joystick up and not already aimed up, aim cannon up
         if(vertical < 0 && !aimUp) {
@@ -33,7 +33,7 @@ public class CannonScript : MonoBehaviour
         // If player is facing left or right (so it doesn't shoot in the z axis)...
         if (transform.root.forward == new Vector3(1, 0, 0) || transform.root.forward == new Vector3(-1, 0, 0)) {
             // If cannon has a weapon and fire button is pressed...
-            if (currentWeapon != null && Input.GetButtonDown("Fire" + player.playerNumber)) {
+            if (currentWeapon != null && Input.GetButtonDown("Fire" + player.inputNumber)) {
                 // Shoot and update the ammo display
                 //currentWeapon.Shoot(this);
                 Shoot();

@@ -16,11 +16,15 @@ public class PlayerStats : MonoBehaviour {
     Text[] UIAmmo;
     Text[] UIScoreText;
 
+    Gameflow gameflow;
+
     // Initialisations
-    void Start() {
+    void Awake() {
         playerScores = new int[4];
         playerDeathCounts = new int[4];
         playerColors = new Color[4] { Color.grey, Color.grey, Color.grey, Color.grey };
+
+        gameflow = GetComponent<Gameflow>();
     }
 
 	
@@ -93,7 +97,7 @@ public class PlayerStats : MonoBehaviour {
         }
         // If all three martinis are collected by the player, stop the game
         if (martiniItems == 3)
-            Gameflow.GameWon(player);
+            gameflow.GameWon(player);
     }
 
 
@@ -111,7 +115,7 @@ public class PlayerStats : MonoBehaviour {
             UIAmmo[player.playerNumber - 1].text = "";
     }
 
-    
+
 
     ///////////////////NOT CHECKED//////////////////////
 

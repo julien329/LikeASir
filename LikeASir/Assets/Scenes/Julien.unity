@@ -325,14 +325,18 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 22364530, guid: 40fc5c2a6dd80c847a0fdf39d9b25a55, type: 2}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 1307985424}
     - target: {fileID: 22397136, guid: 40fc5c2a6dd80c847a0fdf39d9b25a55, type: 2}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1307985424}
+    - target: {fileID: 22364530, guid: 40fc5c2a6dd80c847a0fdf39d9b25a55, type: 2}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1307985424}
+    - target: {fileID: 11470916, guid: 40fc5c2a6dd80c847a0fdf39d9b25a55, type: 2}
+      propertyPath: m_Text
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 40fc5c2a6dd80c847a0fdf39d9b25a55, type: 2}
   m_IsPrefabParent: 0
@@ -436,6 +440,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visibleOffset: 6
   moveSmoothIntensity: 4
+  minZoom: 12
+  maxZoom: 50
 --- !u!1 &1828392235
 GameObject:
   m_ObjectHideFlags: 0

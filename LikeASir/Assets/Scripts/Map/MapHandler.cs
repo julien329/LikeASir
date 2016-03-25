@@ -33,15 +33,14 @@ public class MapHandler : MonoBehaviour {
         martinisList = new List<GameObject>();
         hatsList = new List<GameObject>();
         players = new List<GameObject>();
+
+        playerStats = GameObject.Find("GameFlow").GetComponent<PlayerStats>();
     }
 
 
     // Initiation
     void Start() {
-        playerStats = GameObject.Find("GameFlow").GetComponent<PlayerStats>();
-
         LoadRessources();
-        SpawnPlayers(Gameflow.playersInGame);
 
         StartCoroutine(ActivatePlatforms());
         StartCoroutine(SpawnMartinis());
@@ -144,21 +143,22 @@ public class MapHandler : MonoBehaviour {
 
 
     // Initially spawn all present players
-    public void SpawnPlayers(List<int> playersInGame) {
+    public void SpawnPlayers(List<IntroPlayerState> playersInfo) {
         // Initialize the UI element tables
-        playerStats.InitTables(playersInGame.Count);
+        playerStats.InitTables(playersInfo.Count);
 
         // For every prensent players...
-        for (int i = 0; i < playersInGame.Count; i++) {
+        for (int i = 0; i < playersInfo.Count; i++) {
             // Instanciate prefab and add it to the list, then set correct player number and add the chosen color
             players.Add((GameObject)Instantiate(playerPrefab, GetNextSpawn(), playerPrefab.transform.rotation));
             players[i].transform.FindChild("Head").GetComponent<MeshRenderer>().material.color = playerStats.playerColors[i];
             players[i].GetComponent<PlayerController>().playerNumber = i + 1;
+            players[i].GetComponent<PlayerController>().inputNumber = playersInfo[i].inputNumber;
             playerStats.InitPlayerUI(i + 1);
         }
 
         // Erase the displays of the absent players
-        for (int i = playersInGame.Count; i < 4; i++) {
+        for (int i = playersInfo.Count; i < 4; i++) {
             GameObject.Find("Player" + (i + 1) + "UI").SetActive(false);
         }
     }
