@@ -16,7 +16,7 @@ public class PlayerStats : MonoBehaviour {
     Text[] UIAmmo;
     Text[] UIScoreText;
 
-    Gameflow gameflow;
+    public Gameflow gameflow;
 
     // Initialisations
     void Awake() {
@@ -50,12 +50,14 @@ public class PlayerStats : MonoBehaviour {
         UIDeaths[playerNumber - 1].color = playerColors[playerNumber - 1];
 
         UIScoreText[playerNumber - 1] = GameObject.Find("ScoreP" + playerNumber).GetComponent<Text>();
-        UpdateScoreDisplay(playerNumber);
+        UIScoreText[playerNumber - 1].color = playerColors[playerNumber - 1];
 
-        UIAmmo[playerNumber - 1] = GameObject.Find("WeaponP" + playerNumber).GetComponent<Text>();
+        UIAmmo[playerNumber - 1] = GameObject.Find("WeaponP" + playerNumber).GetComponent<Text>();;
         UIAmmo[playerNumber - 1].color = playerColors[playerNumber - 1];
 
         UIMartini[playerNumber - 1] = GameObject.Find("ItemsP" + playerNumber);
+
+        UpdateScoreDisplay(playerNumber);
     }
 
 

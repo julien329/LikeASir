@@ -7,13 +7,13 @@ public class IntroPlayerState : MonoBehaviour {
 
     public int playerNumber = 0;
     public int inputNumber = 0;
-    bool ready;
 
     Queue<Color> availableColors;
     Text playerNameTxt;
     Text playerReadyTxt;
     Text pressToPlayTxt;
     GameObject check;
+    Image panel;
     PlayerStats playerStats;
     Color currentColor = Color.gray;
 
@@ -24,6 +24,7 @@ public class IntroPlayerState : MonoBehaviour {
         playerReadyTxt = transform.GetChild(1).gameObject.GetComponent<Text>();
         pressToPlayTxt = transform.GetChild(2).gameObject.GetComponent<Text>();
         check = transform.GetChild(3).gameObject;
+        panel = GetComponent<Image>();
     }
 
 
@@ -49,23 +50,25 @@ public class IntroPlayerState : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {  
-        if (inputNumber != 0 && Input.GetButtonDown("Fire" + inputNumber)) {
-            //PlayerReady();
-            ChangePlayerColor();
-        }       
+        if (inputNumber != 0 && Input.GetButtonDown("Fire" + inputNumber))
+            ChangePlayerColor();    
 	}
 
 
     // Put player in ready state
-    void PlayerReady() {
-        if (!ready) {
-            ready = true;
-            //playersPlaying[playerNumber - 1] = true;
-            // Update player hud text and activate checkmark
-            playerReadyTxt.text = "Ready!";
-            pressToPlayTxt.text = "Press Start to play!";
-            check.SetActive(true);
-        }
+    public void PlayerReady(int playerNb, int inputNb) {
+        // Set input and player number
+        inputNumber = inputNb;
+        playerNumber = playerNb;
+
+        // Update player hud text and activate checkmark
+        playerReadyTxt.text = "Ready!";
+        pressToPlayTxt.text = "Press Start to Begin!";
+        //check.SetActive(true);
+
+        // Get first available color
+        ChangePlayerColor();
+        panel.color = Color.white;
     }
 
 

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-enum GameState { INTRO, PREFIGHT, FIGHT, POSTFIGHT, ENDING, LOADING }
+enum GameState { INTRO, PREFIGHT, FIGHT, POSTFIGHT, ENDING }
 
 public class Gameflow : MonoBehaviour {
 
@@ -12,9 +12,10 @@ public class Gameflow : MonoBehaviour {
     DynamicCamera mainCamera;
     GameState gameState;
     Text textMod;
-    string textPure;
+    string initialMessage;
     int countDown;
     int gameTimer;
+    public int gameDuration = 90;
 
     AudioSource audioSource;
     public AudioClip introMenuClip, introGameClip, loopClip;
@@ -22,7 +23,7 @@ public class Gameflow : MonoBehaviour {
     Pair<GameObject, int>[] leaderBoard;
     public PlayerStats playerStats;
 
-    List<IntroPlayerState> playersUI;
+    public List<IntroPlayerState> playersUI;
     int nbInputs = 0;
     bool[] inputsDetected;
     int nextPlayerNumber = 1;
@@ -56,9 +57,7 @@ public class Gameflow : MonoBehaviour {
                 int playerNumber = i + 1;
                 if (Input.GetButtonDown("Fire"+ playerNumber) && !inputsDetected[playerNumber - 1]) {
                     playersUI.Add(GameObject.Find("Player" + nextPlayerNumber + "UI").GetComponent<IntroPlayerState>());
-                    playersUI[playersUI.Count - 1].inputNumber = playerNumber;
-                    playersUI[playersUI.Count - 1].playerNumber = nextPlayerNumber;
-                    playersUI[playersUI.Count - 1].ChangePlayerColor();
+                    playersUI[playersUI.Count - 1].PlayerReady(nextPlayerNumber, playerNumber);
 
                     nextPlayerNumber++;
                     inputsDetected[playerNumber - 1] = true;
@@ -73,33 +72,27 @@ public class Gameflow : MonoBehaviour {
             CheckForInputs();
 
             if (playersUI.Count > 0 && Input.GetButtonDown("Start"))
-                gameState = GameState.LOADING;
+                gameState = GameState.PREFIGHT;
 
             yield return null;
         }
-        StartCoroutine(Prefight());
+        SceneManager.LoadScene(1);
     }
 
 
     IEnumerator Prefight() {
-        SceneManager.LoadScene(1);
-
-        yield return new WaitUntil(() => gameState == GameState.PREFIGHT);
-
-        mapHandler.SpawnPlayers(playersUI);
-
-        countDown = 2;
-        textMod.text = textPure + "\n" + countDown.ToString();
+        countDown = 3;
+        textMod.text = initialMessage + "\n" + countDown.ToString();
 
         while (gameState == GameState.PREFIGHT) {
             yield return new WaitForSeconds(1f);
 
             countDown--;
-            textMod.text = textPure + "\n" + countDown.ToString();
+            textMod.text = initialMessage + "\n" + countDown.ToString();
 
             if (countDown == 0) {
-                yield return new WaitForSeconds(1f);
-                textMod.text = textPure + "\n" + "Fight!";
+                textMod.text = initialMessage + "\n" + "Fight!";
+
                 yield return new WaitForSeconds(1f);
 
                 mapHandler.enabled = true;
@@ -115,17 +108,19 @@ public class Gameflow : MonoBehaviour {
 
     IEnumerator Fight() {
         GameObject.Find("UICamera").GetComponent<Camera>().cullingMask |= (1 << 10);
-        gameTimer = 90;
-        textMod.text = gameTimer.ToString();  
+        gameTimer = gameDuration;
+        textMod.text = gameTimer.ToString();
+
+        mapHandler.SpawnPlayers(playersUI);
 
         while (gameState == GameState.FIGHT) {
             yield return new WaitForSeconds(1f);
-
             gameTimer--;
             textMod.text = gameTimer.ToString();
 
             if (gameTimer == 0) {
                 textMod.text = "Time is up!";
+                yield return new WaitForSeconds(1f);
                 //playerStats.fillLeaderBoard();  // NOT WORKING
                 gameState = GameState.POSTFIGHT;
             }
@@ -136,26 +131,22 @@ public class Gameflow : MonoBehaviour {
 
     IEnumerator PostFight() {
         countDown = 3;
-        textMod.text = textPure + "\n" + countDown.ToString();
+        textMod.text = "Score in" + "\n" + countDown.ToString();
         
         while (gameState == GameState.POSTFIGHT) {
             yield return new WaitForSeconds(1f);
 
             countDown--;
-            textMod.text = textPure + "\n" + countDown.ToString();
+            textMod.text = "Score in" + "\n" + countDown.ToString();
 
             if (countDown == 0)
-                gameState = GameState.LOADING;
+                gameState = GameState.ENDING;
         }
-        StartCoroutine(Ending());
+        SceneManager.LoadScene(2);
     }
           
        
     IEnumerator Ending() {
-        SceneManager.LoadScene(2);
-
-        yield return new WaitUntil(() => gameState == GameState.ENDING);
-
         while (gameState == GameState.ENDING) {
             yield return null;
 
@@ -201,15 +192,18 @@ public class Gameflow : MonoBehaviour {
         if (i == 1) {
             StopCoroutine(PlayMusicMenu());
             StartCoroutine(PlayMusicGame());
-            gameState = GameState.PREFIGHT;
+
             mapHandler = GameObject.Find("MapHandler").GetComponent<MapHandler>();
             textMod = GameObject.Find("ReadyMessage").GetComponent<Text>();
             mainCamera = GameObject.Find("Main Camera").GetComponent<DynamicCamera>();
 
-            textPure = textMod.text;
+            mapHandler.PrepareGame(playersUI);
+            initialMessage = textMod.text;
+
+            StartCoroutine(Prefight());
         }
         if (i == 2) {
-            gameState = GameState.ENDING;
+            StartCoroutine(Ending());
         }
     }
 
