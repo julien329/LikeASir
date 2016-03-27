@@ -15,7 +15,7 @@ public class Gameflow : MonoBehaviour {
     string initialMessage;
     int countDown;
     int gameTimer;
-    public int gameDuration = 90;
+    public int gameDuration = 120;
 
     AudioSource audioSource;
     public AudioClip introMenuClip, introGameClip, loopClip;

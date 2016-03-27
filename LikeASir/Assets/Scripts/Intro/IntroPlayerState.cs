@@ -12,7 +12,7 @@ public class IntroPlayerState : MonoBehaviour {
     Text playerNameTxt;
     Text playerReadyTxt;
     Text pressToPlayTxt;
-    GameObject check;
+    //GameObject check;
     Image panel;
     PlayerStats playerStats;
     Color currentColor = Color.gray;
@@ -23,7 +23,7 @@ public class IntroPlayerState : MonoBehaviour {
         playerNameTxt = transform.GetChild(0).gameObject.GetComponent<Text>();
         playerReadyTxt = transform.GetChild(1).gameObject.GetComponent<Text>();
         pressToPlayTxt = transform.GetChild(2).gameObject.GetComponent<Text>();
-        check = transform.GetChild(3).gameObject;
+        //check = transform.GetChild(3).gameObject;
         panel = GetComponent<Image>();
     }
 

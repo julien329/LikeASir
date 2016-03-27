@@ -65,6 +65,7 @@ public class MapHandler : MonoBehaviour {
         player.martiniList = new bool[3];
         player.cannon.RemoveWeapon();
         playerStats.UpdateItemDisplay(player);
+        playerStats.AddPoints(player.playerNumber, -10);
 
         // Desactive player and set respawn timer
         player.gameObject.SetActive(false);

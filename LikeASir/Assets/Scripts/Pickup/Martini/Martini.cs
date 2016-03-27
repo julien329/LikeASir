@@ -9,6 +9,7 @@ public class Martini : IPickup
     public MartiniPiece martiniType;
     public AudioClip glassSound, oliveSound, uraniumSound;
     public static bool isSpawned = false;
+    int pickUpPoints = 50;
 
     protected override void PickedUp(PlayerController player)
     {
@@ -30,6 +31,9 @@ public class Martini : IPickup
             player.martiniList[(int)martiniType] = true;
             player.mapHandler.playerStats.UpdateItemDisplay(player);
         }
+
+        // Add points for picking up a martini
+        player.playerDisplay.AddPoints(player.playerNumber, pickUpPoints);
 
         // Destroy object in game
         isSpawned = false;

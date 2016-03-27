@@ -27,8 +27,9 @@ public class PlayerController : MonoBehaviour {
     public bool grounded = true;
     [Range(1,4)]
     public int playerNumber = 0;
+    [Range(1, 4)]
     public int inputNumber = 0;
-    public int respawnTime = 3;
+    public int respawnTime = 1;
 
     int idleSeconds = 3;
     float rayCastOffsetX;
@@ -182,6 +183,7 @@ public class PlayerController : MonoBehaviour {
 
     // Used to manage player's death
     public void playerDied() {
+        playerRigidbody.velocity = Vector3.zero;
         // Call corresponding function in mapHandler
         mapHandler.PlayerDied(this);
     }
