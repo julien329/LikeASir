@@ -41,7 +41,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_LightmapsMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -66,7 +66,8 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000001, guid: cbe169257e9721b49a2294a48f7ce932,
+    type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
 NavMeshSettings:
@@ -1217,10 +1218,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1261fa70b2eddeb49aa16a6b87a43e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameDuration: 120
   introMenuClip: {fileID: 8300000, guid: 2cade113a5fbbc64699e168182fcb5cd, type: 3}
   introGameClip: {fileID: 8300000, guid: a7f956b63d69dc1409677b637130fdf4, type: 3}
   loopClip: {fileID: 8300000, guid: 89322195ccb76554eafad6fefd65aceb, type: 3}
   playerStats: {fileID: 0}
+  playersUI: []
 --- !u!4 &1185555075
 Transform:
   m_ObjectHideFlags: 0
@@ -1321,6 +1324,7 @@ MonoBehaviour:
   playerColors: []
   playerScores: 
   playerDeathCounts: 
+  gameflow: {fileID: 0}
 --- !u!1 &1204206215
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,6 +1907,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
