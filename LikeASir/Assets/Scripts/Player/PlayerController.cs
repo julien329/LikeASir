@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviour {
     IEnumerator CheckIfGrounded() {
         checkingForGround = true;
         // Initial delay, so the ground is not detected before jumping
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.4f);
         // While not grounded...
         while (!grounded) {
             // If raycast detects the ground layer at player's feet...
@@ -267,8 +267,10 @@ public class PlayerController : MonoBehaviour {
     void OnEnable() {
         // Allow jumping
         grounded = true;
+        checkingForGround = false;
         // Start checking for jumping on other players and start invoking IdleTimeCounter.
         StartCoroutine(JumpOnPlayer());
+        print("hello");
         InvokeRepeating("IdleTimeCounter", 1f, 1f);
     }
 }
