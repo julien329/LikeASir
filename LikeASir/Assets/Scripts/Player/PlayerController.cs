@@ -20,20 +20,23 @@ public class PlayerController : MonoBehaviour {
 
     public float maxSlidingVelocity = 5f;
     public float maxFallingVelocity = 25f;
-    public float stickToWallTime = 0.5f;
+    public float stickToWallTime = 0.25f;
     public float speed = 8f;
     public float jumpForce = 17f;
     public float distToGround = 0.85f;
-    public bool grounded = true;
     [Range(1,4)]
     public int playerNumber = 0;
     [Range(1, 4)]
     public int inputNumber = 0;
     public int respawnTime = 1;
+    public float gravity;
 
-    int idleSeconds = 3;
+    int idleSeconds = 0;
+    int idleTargetTime = 5;
     float rayCastOffsetX;
-    
+    bool grounded = true;
+    bool checkingForGround;
+
 
     // Use this for initialization
     void Awake () {
@@ -52,6 +55,9 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         Move();
         Jump();
+
+        // Add manual gravity to the player
+        playerRigidbody.AddForce(new Vector3(0, gravity, 0), ForceMode.Acceleration);
     }
 
 
@@ -93,15 +99,17 @@ public class PlayerController : MonoBehaviour {
             PlaySound(jumpSound);
 
             // Start checking for the landing
-            StartCoroutine(CheckIfGrounded());
+            if (!checkingForGround)
+                StartCoroutine(CheckIfGrounded());
         }
     }
 
 
     // Used to detect when the player touches the ground
     IEnumerator CheckIfGrounded() {
+        checkingForGround = true;
         // Initial delay, so the ground is not detected before jumping
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.3f);
         // While not grounded...
         while (!grounded) {
             // If raycast detects the ground layer at player's feet...
@@ -110,11 +118,12 @@ public class PlayerController : MonoBehaviour {
                 grounded = true;
                 lastWallJumped = lastWallTouched = null;
                 // Reset velocity on landing, to cancel high velocity clipping through colliders and unbreakable momentum
-                playerRigidbody.velocity = new Vector3(0f, 0f, 0f);
+                playerRigidbody.velocity = Vector3.zero;
             }
             // Return point for coroutine
             yield return null;
         }
+        checkingForGround = false;
     }
 
 
@@ -148,14 +157,14 @@ public class PlayerController : MonoBehaviour {
 
     // Used to stick the player to the wall for easier wallJumping
     IEnumerator StickToWall() {
-        // Set timer and Y position
+        // Set timer and X position
         float stickTimer = stickToWallTime;
-        float initialPosY = transform.position.y;
+        float initialPosX = transform.position.x;
 
         // While timer not over and still grounded...
         while (stickTimer > 0 && grounded) {
-            // Set Y position to initial Y position to keep the player in air
-            playerRigidbody.position = new Vector3(playerRigidbody.position.x, initialPosY, playerRigidbody.position.z);
+            // Set X position to initial X position to stick the player to the wall
+            playerRigidbody.position = new Vector3(initialPosX, playerRigidbody.position.y, 0);
             // Decrement the timer
             stickTimer -= Time.deltaTime;
             // Return point for coroutine
@@ -169,7 +178,7 @@ public class PlayerController : MonoBehaviour {
         // Increment timer
         idleSeconds++;
         // If enough time has passed, trigger the animation
-        if (idleSeconds == 3)
+        if (idleSeconds == idleTargetTime)
             anim.SetTrigger("IdleLong");
     }
 
@@ -216,8 +225,6 @@ public class PlayerController : MonoBehaviour {
                 grounded = true;
                 StartCoroutine(StickToWall());
             }
-            // Save the lastWallTouched
-            lastWallTouched = other.gameObject;
         }  
     }
 
@@ -225,10 +232,12 @@ public class PlayerController : MonoBehaviour {
     // On ongoing collision with an other collider
     void OnCollisionStay(Collision other) {
         // If the other collider is a wall and the wall is not the lastWallJumped...
-        if (other.gameObject.tag == "Wall" && other.gameObject != lastWallJumped) {
+        if (other.gameObject.tag == "Wall" && other.gameObject != lastWallJumped && playerRigidbody.velocity.y < 0) {
             // Slide down the wall slowly after sticking ends and set grounded again to prevent bugs
             playerRigidbody.velocity = Vector3.ClampMagnitude(playerRigidbody.velocity, maxSlidingVelocity);
             grounded = true;
+            // Save the lastWallTouched
+            lastWallTouched = other.gameObject;
         }
     }
 
@@ -239,9 +248,9 @@ public class PlayerController : MonoBehaviour {
         if (other.gameObject.tag == "Wall") {
             // Remove jumping ability (can't wall jump if not on wall)
             grounded = false;
-            // Stop sticking to the wall (not on wall anymore) and start checking for when the player touches the ground
-            StopCoroutine(StickToWall());
-            StartCoroutine(CheckIfGrounded());
+            // Start checking for when the player touches the ground
+            if(!checkingForGround)
+                StartCoroutine(CheckIfGrounded());
         }
     }
 

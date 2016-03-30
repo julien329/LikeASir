@@ -94,7 +94,7 @@ MonoBehaviour:
   shootBulletSound: {fileID: 8300000, guid: 304511acb498c99449fd987dcdbdff7b, type: 3}
   power: 50
   lifeTime: 2
-  gravity: -9
+  gravity: -15
 --- !u!135 &13589816
 SphereCollider:
   m_ObjectHideFlags: 1
