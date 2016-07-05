@@ -22,20 +22,29 @@ public class PlayerController : MonoBehaviour {
     public float maxFallingVelocity = 25f;
     public float stickToWallTime = 0.25f;
     public float speed = 8f;
-    public float jumpForce = 17f;
     public float distToGround = 0.85f;
     [Range(1,4)]
     public int playerNumber = 0;
     [Range(1, 4)]
     public int inputNumber = 0;
     public int respawnTime = 1;
-    public float gravity;
 
     int idleSeconds = 0;
     int idleTargetTime = 5;
     float rayCastOffsetX;
-    bool grounded = true;
     bool checkingForGround;
+
+    public float accelerationTimeGrounded = 0.05f;
+    public float accelerationTimeAirborne = 0.1f;
+    public float timeToJumpApex = 0.5f;
+    public float jumpHeight = 4f;
+    float jumpVelocity;
+    float gravity;
+    float velocityXSmoothing;
+    Vector3 velocity;
+    bool canJump;
+    bool isAirborne;
+    bool hadJumpAvailable;
 
 
     // Use this for initialization
@@ -50,12 +59,23 @@ public class PlayerController : MonoBehaviour {
         rayCastOffsetX = GetComponent<BoxCollider>().bounds.size.x / 3;
     }
 
-	
-	// Update is called once per frame
-	void Update () {
+    void Start() {
+        // Formula : deltaMovement = velocityInitial * time + (acceleration * time^2) / 2  -->  where acceleration = gravity and velocityInitial is null
+        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        // Formula : velocityFinal = velocityInitial + acceleration * time  -->  where velocityFinal = jumpVelocity and velocityInitial is null
+        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+    }
+
+
+    // Update is called once per frame
+    void Update () {
         Move();
         Jump();
+    }
 
+    void FixedUpdate() {
+        // Clamp player velocity with a maximum velocity.
+        playerRigidbody.velocity = Vector3.ClampMagnitude(playerRigidbody.velocity, maxFallingVelocity);
         // Add manual gravity to the player
         playerRigidbody.AddForce(new Vector3(0, gravity, 0), ForceMode.Acceleration);
     }
@@ -71,12 +91,10 @@ public class PlayerController : MonoBehaviour {
             idleSeconds = 0;
 
         // Set the movement vector based on the player input.
-        Vector3 move = new Vector3(horizontal, 0f, 0f);
-        // Move current position to target position, smoothed and scaled by speed
-        playerRigidbody.MovePosition(transform.position + move * speed * Time.deltaTime);
+        velocity.x = Mathf.SmoothDamp(velocity.x, horizontal, ref velocityXSmoothing, isAirborne ? accelerationTimeAirborne : accelerationTimeGrounded);
 
-        // Clamp player velocity with a maximum velocity.
-        playerRigidbody.velocity = Vector3.ClampMagnitude(playerRigidbody.velocity, maxFallingVelocity);
+        // Move current position to target position, smoothed and scaled by speed
+        playerRigidbody.MovePosition(transform.position + velocity * speed * Time.deltaTime);
 
         // Set direction bool for animation in mechanim
         anim.SetInteger("Horizontal", (int)horizontal);
@@ -85,45 +103,39 @@ public class PlayerController : MonoBehaviour {
 
     // Used to control jumping
     private void Jump() {
-        // If the jump intput is pressed and the player is grounded...
-        if (Input.GetButtonDown("Jump" + inputNumber) && grounded) {
-            // Set grounded to false, and save lastWallTouched in lastWallJumped (used for wallJumping) (null if not wallJumping)
+        // If the jump intput is pressed and the player can jump...
+        if (Input.GetButtonDown("Jump" + inputNumber) && canJump) {
+            // Set canJump to false, and save lastWallTouched in lastWallJumped (used for wallJumping) (null if not wallJumping)
             lastWallJumped = lastWallTouched;
-            grounded = false;
+            canJump = false;
+            isAirborne = true;
 
-            // Reset Y velocity and add force up corresponding to the jumpforce
+            // Reset Y velocity and add force up corresponding to the jumpVelocity
             playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
-            playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            playerRigidbody.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse);
 
             // Play the jump sound
             PlaySound(jumpSound);
-
-            // Start checking for the landing
-            if (!checkingForGround)
-                StartCoroutine(CheckIfGrounded());
+        }
+        else {
+            CheckIfGrounded();
         }
     }
 
 
     // Used to detect when the player touches the ground
-    IEnumerator CheckIfGrounded() {
-        checkingForGround = true;
-        // Initial delay, so the ground is not detected before jumping
-        yield return new WaitForSeconds(0.4f);
-        // While not grounded...
-        while (!grounded) {
-            // If raycast detects the ground layer at player's feet...
-            if (RaycastHit(groundLayer)) {
-                // Set grounded to true and empty saved walls as not wall was touched 
-                grounded = true;
+    void CheckIfGrounded() {
+        // If raycast detects the ground layer at player's feet...
+        if (RaycastHit(groundLayer)) {
+            if (playerRigidbody.velocity.y <= 0) {
+                canJump = true;
+                isAirborne = false;
                 lastWallJumped = lastWallTouched = null;
-                // Reset velocity on landing, to cancel high velocity clipping through colliders and unbreakable momentum
-                playerRigidbody.velocity = Vector3.zero;
             }
-            // Return point for coroutine
-            yield return null;
         }
-        checkingForGround = false;
+        else {
+            isAirborne = true;
+        }
     }
 
 
@@ -138,7 +150,7 @@ public class PlayerController : MonoBehaviour {
 
                 // Reset Y velocity and add a small force up for jumping on the other player.
                 playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
-                playerRigidbody.AddForce(Vector3.up * jumpForce * 0.75f, ForceMode.Impulse);
+                playerRigidbody.AddForce(Vector3.up * jumpVelocity * 0.75f, ForceMode.Impulse);
 
                 // Stop ennemy player Y momemtum and add small force down.
                 hit.rigidbody.velocity = new Vector3(playerRigidbody.velocity.x, 0f, playerRigidbody.velocity.z);
@@ -147,7 +159,7 @@ public class PlayerController : MonoBehaviour {
                 // Delay so the the player can't jump again immediately (prevent applying multiple forces at the same time)
                 yield return new WaitForSeconds(0.02f);
                 // Enable jumping again for the player
-                grounded = true;
+                canJump = true;
             }
             // Return point for coroutine
             yield return null;
@@ -161,8 +173,8 @@ public class PlayerController : MonoBehaviour {
         float stickTimer = stickToWallTime;
         float initialPosX = transform.position.x;
 
-        // While timer not over and still grounded...
-        while (stickTimer > 0 && grounded) {
+        // While timer not over and can still jump...
+        while (stickTimer > 0 && canJump) {
             // Set X position to initial X position to stick the player to the wall
             playerRigidbody.position = new Vector3(initialPosX, playerRigidbody.position.y, 0);
             // Decrement the timer
@@ -219,10 +231,12 @@ public class PlayerController : MonoBehaviour {
     void OnCollisionEnter(Collision other) {
         // If the other collider is a wall...
         if (other.gameObject.tag == "Wall") {
+
+            hadJumpAvailable = canJump;
             // If the wall is not the lastWallJumped...
             if (other.gameObject != lastWallJumped) {
                 // Enable jumping again for the player (wallJump) and start the StickToWall (easier wallJumping)
-                grounded = true;
+                canJump = true;
                 StartCoroutine(StickToWall());
             }
         }  
@@ -233,9 +247,9 @@ public class PlayerController : MonoBehaviour {
     void OnCollisionStay(Collision other) {
         // If the other collider is a wall and the wall is not the lastWallJumped...
         if (other.gameObject.tag == "Wall" && other.gameObject != lastWallJumped && playerRigidbody.velocity.y < 0) {
-            // Slide down the wall slowly after sticking ends and set grounded again to prevent bugs
+            // Slide down the wall slowly after sticking ends and set canJump again to prevent bugs
             playerRigidbody.velocity = Vector3.ClampMagnitude(playerRigidbody.velocity, maxSlidingVelocity);
-            grounded = true;
+            canJump = true;
             // Save the lastWallTouched
             lastWallTouched = other.gameObject;
         }
@@ -247,10 +261,7 @@ public class PlayerController : MonoBehaviour {
         // If the other collider is a wall...
         if (other.gameObject.tag == "Wall") {
             // Remove jumping ability (can't wall jump if not on wall)
-            grounded = false;
-            // Start checking for when the player touches the ground
-            if(!checkingForGround)
-                StartCoroutine(CheckIfGrounded());
+            canJump = hadJumpAvailable;
         }
     }
 
@@ -266,11 +277,12 @@ public class PlayerController : MonoBehaviour {
     // When object is set active
     void OnEnable() {
         // Allow jumping
-        grounded = true;
+        canJump = true;
+        isAirborne = false;
         checkingForGround = false;
+
         // Start checking for jumping on other players and start invoking IdleTimeCounter.
         StartCoroutine(JumpOnPlayer());
-        print("hello");
         InvokeRepeating("IdleTimeCounter", 1f, 1f);
     }
 }
