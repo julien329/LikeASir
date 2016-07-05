@@ -2095,15 +2095,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   maxSlidingVelocity: 5
-  maxFallingVelocity: 25
+  maxFallingVelocity: 22.5
   stickToWallTime: 0.25
   speed: 8
-  jumpForce: 17
   distToGround: 0.85
   playerNumber: 1
   inputNumber: 0
   respawnTime: 1
-  gravity: -65
+  accelerationTimeGrounded: 0.05
+  accelerationTimeAirborne: 0.1
+  timeToJumpApex: 0.5
+  jumpHeight: 4
 --- !u!114 &11492892
 MonoBehaviour:
   m_ObjectHideFlags: 1
