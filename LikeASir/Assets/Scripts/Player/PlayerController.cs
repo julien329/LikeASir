@@ -36,16 +36,18 @@ public class PlayerController : MonoBehaviour {
 
     public float accelerationTimeGrounded = 0.05f;
     public float accelerationTimeAirborne = 0.1f;
+    public float passiveDecelerationTime = 0.05f;
     public float timeToJumpApex = 0.5f;
     public float jumpHeight = 4f;
     float jumpVelocity;
     float gravity;
-    float velocityXSmoothing;
+    float activeVelocityXSmoothing;
+    float passiveVelocityXSmoothing;
     Vector3 velocity;
     bool canJump;
     bool isAirborne;
     bool hadJumpAvailable;
-
+    
 
     // Use this for initialization
     void Awake () {
@@ -91,10 +93,14 @@ public class PlayerController : MonoBehaviour {
             idleSeconds = 0;
 
         // Set the movement vector based on the player input.
-        velocity.x = Mathf.SmoothDamp(velocity.x, horizontal, ref velocityXSmoothing, isAirborne ? accelerationTimeAirborne : accelerationTimeGrounded);
+        velocity.x = Mathf.SmoothDamp(velocity.x, horizontal, ref activeVelocityXSmoothing, isAirborne ? accelerationTimeAirborne : accelerationTimeGrounded);
 
         // Move current position to target position, smoothed and scaled by speed
         playerRigidbody.MovePosition(transform.position + velocity * speed * Time.deltaTime);
+
+        if (Mathf.Sign(horizontal) != Mathf.Sign(playerRigidbody.velocity.y)) {
+            playerRigidbody.velocity = new Vector3(Mathf.SmoothDamp(playerRigidbody.velocity.x, 0, ref passiveVelocityXSmoothing, passiveDecelerationTime), playerRigidbody.velocity.y, 0);
+        }
 
         // Set direction bool for animation in mechanim
         anim.SetInteger("Horizontal", (int)horizontal);
@@ -174,7 +180,7 @@ public class PlayerController : MonoBehaviour {
         float initialPosX = transform.position.x;
 
         // While timer not over and can still jump...
-        while (stickTimer > 0 && canJump) {
+        while (stickTimer > 0 && canJump && isAirborne) {
             // Set X position to initial X position to stick the player to the wall
             playerRigidbody.position = new Vector3(initialPosX, playerRigidbody.position.y, 0);
             // Decrement the timer
